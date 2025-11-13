@@ -1,10 +1,8 @@
 /**
- * Placeholder Express server entry point.
- *
- * Replace the contents of this file with your actual server implementation.
- * Keeping the file on disk means you can open it from the editor tab in Cursor.
+ * Express server for Sationly
+ * Handles API endpoints for local development
+ * For production, use Vercel serverless functions in api/ directory
  */
-console.log('server.js placeholder loaded.  Add your Express server code here.');
 
 import express from 'express';
 import multer from 'multer';
