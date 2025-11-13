@@ -43,7 +43,37 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateStats();
   initializeAccountModal();
   loadNavProfilePicture();
+  initializeHeaderScroll();
 });
+
+// Hide header on scroll down, show on scroll up
+let lastScrollTop = 0;
+let scrollTimeout = null;
+
+function initializeHeaderScroll() {
+  const header = document.querySelector('.dashboard-header');
+  if (!header) return;
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Clear any existing timeout
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    
+    // Hide header when scrolling down, show when scrolling up
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+      // Scrolling down - hide header
+      header.classList.add('hidden');
+    } else {
+      // Scrolling up - show header
+      header.classList.remove('hidden');
+    }
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }, false);
+}
 
 // Check if user is signed in - only redirect if NOT signed in
 async function checkTierAndRedirect() {
