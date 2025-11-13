@@ -127,7 +127,7 @@ function showSignInButton() {
   const getStartedBtn2 = document.getElementById('get-started-btn-2');
   if (getStartedBtn2) {
     getStartedBtn2.onclick = () => {
-      window.openPaywall();
+      window.location.href = 'signup.html';
     };
   }
 }
@@ -164,7 +164,7 @@ function showDashboardButton() {
   }
 }
 
-// Waitlist form handling with Supabase
+// Initialize auth check on page load
 document.addEventListener('DOMContentLoaded', function() {
   // Check auth status first (but don't block page load)
   // Only redirect if user has active tier - otherwise just show appropriate button
@@ -176,95 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
       showSignInButton();
     });
   }, 100);
-  const waitlistForm = document.getElementById('waitlist-form');
-  const waitlistSuccess = document.getElementById('waitlist-success');
-  
-  // Supabase configuration - Replace these with your actual values
-  const SUPABASE_URL = 'https://ipersqmillkeppeiyhfd.supabase.co'; // e.g., 'https://your-project.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ'; // Your anon/public key
-  const SUPABASE_TABLE = 'waitlist'; // Your table name
-  
-  if (waitlistForm) {
-    waitlistForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Get form data
-      const email = document.getElementById('waitlist-email').value;
-      const name = document.getElementById('waitlist-name').value || null;
-      
-      // Prepare data for Supabase
-      const data = {
-        email: email,
-        name: name,
-        created_at: new Date().toISOString()
-      };
-      
-      // Check if credentials are configured
-      if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
-        alert('Supabase is not configured. Please set up your Supabase credentials in app.js');
-        console.error('Supabase credentials not configured');
-        return;
-      }
-
-      // Submit to Supabase
-      fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(async response => {
-        if (response.ok) {
-          // Show success message
-          waitlistForm.style.display = 'none';
-          waitlistSuccess.style.display = 'block';
-          
-          // Optional: Auto-close after 3 seconds
-          // setTimeout(() => {
-          //   window.closeWaitlist();
-          // }, 3000);
-        } else {
-          // Try to parse error response
-          let errorData;
-          try {
-            errorData = await response.json();
-          } catch (e) {
-            errorData = { message: response.statusText, code: response.status };
-          }
-          
-          console.error('Supabase error:', errorData);
-          
-          // Handle specific error cases
-          if (response.status === 401) {
-            alert('Authentication error. Please check your Supabase API key and RLS policies. See console for details.');
-            console.error('401 Unauthorized - Check:');
-            console.error('1. Is your SUPABASE_ANON_KEY correct?');
-            console.error('2. Do you have an INSERT policy for anonymous users?');
-            console.error('3. Is RLS enabled on the waitlist table?');
-          } else if (response.status === 409 || errorData.code === '23505' || errorData.message?.includes('duplicate')) {
-            // Handle duplicate email error gracefully
-            waitlistForm.style.display = 'none';
-            waitlistSuccess.style.display = 'block';
-          } else if (response.status === 404) {
-            alert('Table not found. Please check that your table name is correct and exists in Supabase.');
-            console.error('404 Not Found - Check:');
-            console.error('1. Is your table name correct? (currently: ' + SUPABASE_TABLE + ')');
-            console.error('2. Does the table exist in your Supabase project?');
-          } else {
-            alert('Something went wrong. Please try again. Error: ' + (errorData.message || response.statusText));
-          }
-        }
-      })
-      .catch(error => {
-        console.error('Network error:', error);
-        alert('Network error. Please check your internet connection and try again.');
-      });
-    });
-  }
 });
 
 // Functions are already defined in the head, just initialize the rest

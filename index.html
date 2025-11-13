@@ -17,47 +17,8 @@
     <link rel="stylesheet" href="styles.css" />
     <script>
       // Define functions immediately so onclick handlers can use them
-      // Waitlist feature flag - set to false to remove waitlist and go straight to paywall
-      window.ENABLE_WAITLIST = true;
-
       window.openPaywall = function() {
-        // Check if waitlist is enabled
-        if (window.ENABLE_WAITLIST) {
-          window.openWaitlist();
-        } else {
-          window.openPaywallDirect();
-        }
-      };
-
-      window.openPaywallDirect = function() {
-        const paywallOverlay = document.getElementById('paywall-overlay');
-        if (paywallOverlay) {
-          paywallOverlay.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
-          console.log('Paywall opened');
-        } else {
-          console.error('Paywall overlay not found');
-        }
-      };
-
-      window.openWaitlist = function() {
-        const waitlistOverlay = document.getElementById('waitlist-overlay');
-        if (waitlistOverlay) {
-          waitlistOverlay.style.display = 'flex';
-          document.body.style.overflow = 'hidden';
-          console.log('Waitlist opened');
-        } else {
-          console.error('Waitlist overlay not found');
-        }
-      };
-
-      window.closeWaitlist = function() {
-        const waitlistOverlay = document.getElementById('waitlist-overlay');
-        if (waitlistOverlay) {
-          waitlistOverlay.style.display = 'none';
-          document.body.style.overflow = '';
-          console.log('Waitlist closed');
-        }
+        window.location.href = 'signup.html';
       };
 
       window.closePaywall = function() {
@@ -243,7 +204,7 @@
             </li>
           </ul>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-            <button type="button" class="primary light" id="get-started-btn-2" onclick="window.openPaywall(); return false;">Get Started</button>
+            <button type="button" class="primary light" id="get-started-btn-2" onclick="window.location.href='signup.html'; return false;">Get Started</button>
           </div>
         </div>
         <div class="contrast-visual" aria-hidden="true">
@@ -305,55 +266,6 @@
         </div>
       </section>
     </main>
-
-    <!-- Waitlist Modal -->
-    <div class="paywall-overlay" id="waitlist-overlay" style="display: none;">
-      <div class="paywall-modal waitlist-modal">
-        <button class="paywall-close" onclick="window.closeWaitlist(); return false;" aria-label="Close">&times;</button>
-        <h2>Join the Waitlist</h2>
-        <p class="waitlist-subtitle">Be among the first to access Sationly when we launch</p>
-        <div class="waitlist-actions">
-          <button type="button" class="primary" onclick="window.location.href='dashboard.html'; window.closeWaitlist(); return false;" style="width: 100%; margin-bottom: 1rem;">
-            Open Dashboard
-          </button>
-          <p class="waitlist-divider">or</p>
-        </div>
-        <form id="waitlist-form" class="waitlist-form">
-          <div class="form-group">
-            <label for="waitlist-email">Email address</label>
-            <input
-              id="waitlist-email"
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="waitlist-name">Name (optional)</label>
-            <input
-              id="waitlist-name"
-              type="text"
-              name="name"
-              placeholder="Your name"
-            />
-          </div>
-          <button type="submit" class="primary">Join Waitlist</button>
-          <p class="waitlist-disclaimer">We'll notify you when we launch. No spam, unsubscribe anytime.</p>
-        </form>
-        <div id="waitlist-success" class="waitlist-success" style="display: none;">
-          <div class="checkmark-container">
-            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-              <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-              <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
-          </div>
-          <h3>Thank you for joining the waitlist!</h3>
-          <p>We'll send you an email when we launch. Thanks for your interest!</p>
-          <button type="button" class="primary" onclick="window.closeWaitlist(); return false;">Close</button>
-        </div>
-      </div>
-    </div>
 
     <!-- Paywall Modal -->
     <div class="paywall-overlay" id="paywall-overlay" style="display: none;">
