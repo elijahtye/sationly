@@ -246,6 +246,27 @@ app.post('/api/create-checkout-session', async (req, res) => {
   }
 });
 
+// Serve favicon explicitly BEFORE static middleware to ensure no-cache headers
+// Browsers often request /favicon.ico, so handle both
+app.get('/favicon.png', (req, res) => {
+  const faviconPath = path.join(rootDir, 'favicon.png');
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.sendFile(faviconPath);
+});
+
+app.get('/favicon.ico', (req, res) => {
+  // Serve PNG as ICO for browsers that request favicon.ico
+  const faviconPath = path.join(rootDir, 'favicon.png');
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.sendFile(faviconPath);
+});
+
 app.use(express.static(rootDir));
 
 async function storeSessionTurn(payload) {
