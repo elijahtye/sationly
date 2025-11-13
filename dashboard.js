@@ -38,11 +38,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Check if user has selected a tier
   await checkTierAndRedirect();
   
+  // Load profile picture early (before other initializations)
+  loadNavProfilePicture();
+  
   initializeDashboard();
   loadSessionHistory();
   updateStats();
   initializeAccountModal();
-  loadNavProfilePicture();
   initializeHeaderScroll();
 });
 
@@ -1502,12 +1504,22 @@ function updateNavProfilePicture(avatarUrl, email) {
   const navProfilePic = document.getElementById('nav-profile-picture');
   if (!navProfilePic) return;
 
+  // Always ensure image is visible
+  navProfilePic.style.display = 'block';
+  
   if (avatarUrl) {
-    navProfilePic.src = avatarUrl;
-    navProfilePic.style.display = 'block';
+    // Preload the image to avoid flicker
+    const img = new Image();
+    img.onload = () => {
+      navProfilePic.src = avatarUrl;
+    };
+    img.onerror = () => {
+      // If image fails to load, fall back to initials
+      navProfilePic.src = generateInitialsAvatar(email);
+    };
+    img.src = avatarUrl;
   } else {
     navProfilePic.src = generateInitialsAvatar(email);
-    navProfilePic.style.display = 'block';
   }
 }
 
@@ -1518,16 +1530,38 @@ async function loadNavProfilePicture() {
     
     if (!user) return;
 
-    // Load profile
+    const navProfilePic = document.getElementById('nav-profile-picture');
+    if (!navProfilePic) return;
+
+    // Show initials avatar IMMEDIATELY (no delay, no async)
+    navProfilePic.src = generateInitialsAvatar(user.email);
+    navProfilePic.style.display = 'block';
+
+    // Then load actual profile picture asynchronously (in background)
+    // This way user sees initials right away, then it updates if avatar exists
     const { data: profile } = await supabase
       .from('profiles')
       .select('avatar_url')
       .eq('id', user.id)
       .single();
 
-    updateNavProfilePicture(profile?.avatar_url, user.email);
+    // Update with actual avatar if it exists (will smoothly replace initials)
+    if (profile?.avatar_url) {
+      updateNavProfilePicture(profile.avatar_url, user.email);
+    }
+    // If no avatar_url, initials are already showing, so we're done
   } catch (error) {
     console.error('[upword] Error loading nav profile picture:', error);
+    // On error, ensure initials are showing
+    const { supabase } = await import('./supabaseClient.js');
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const navProfilePic = document.getElementById('nav-profile-picture');
+      if (navProfilePic) {
+        navProfilePic.src = generateInitialsAvatar(user.email);
+        navProfilePic.style.display = 'block';
+      }
+    }
   }
 }
 
