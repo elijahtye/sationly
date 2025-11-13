@@ -439,12 +439,25 @@ app.post('/api/sessions', upload.single('audio'), async (req, res) => {
 });
 
 
-// Serve favicon explicitly
+// Serve favicon explicitly (before catch-all route)
+// Browsers often request /favicon.ico, so handle both
 app.get('/favicon.png', (req, res) => {
-  res.sendFile(path.join(rootDir, 'favicon.png'));
+  const faviconPath = path.join(rootDir, 'favicon.png');
+  res.sendFile(faviconPath, { headers: { 'Content-Type': 'image/png' } });
 });
 
+app.get('/favicon.ico', (req, res) => {
+  // Serve PNG as ICO for browsers that request favicon.ico
+  const faviconPath = path.join(rootDir, 'favicon.png');
+  res.sendFile(faviconPath, { headers: { 'Content-Type': 'image/png' } });
+});
+
+// Catch-all route for SPA (must be last)
 app.get('*', (req, res) => {
+  // Don't catch favicon requests
+  if (req.path.includes('favicon')) {
+    return res.status(404).send('Not found');
+  }
   res.sendFile(path.join(rootDir, 'index.html'));
 });
 
