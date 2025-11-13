@@ -14,7 +14,7 @@ async function checkAuthAndLoadData() {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     
     if (authError || !user) {
-      window.location.href = 'auth.html';
+      window.location.href = '/auth';
       return;
     }
 
@@ -112,7 +112,7 @@ async function loadUserSubscription(userId) {
       if (upgradeBtn && (userTier === 'tier1' || userTier === 'tier2')) {
         upgradeBtn.style.display = 'block';
         upgradeBtn.onclick = () => {
-          window.location.href = 'select-tier.html';
+          window.location.href = '/select-tier';
         };
       }
     }
@@ -278,7 +278,7 @@ function setupEventListeners() {
   signOutBtn?.addEventListener('click', async () => {
     if (confirm('Are you sure you want to sign out?')) {
       await supabase.auth.signOut();
-      window.location.href = 'index.html';
+      window.location.href = '/';
     }
   });
 }

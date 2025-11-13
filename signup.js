@@ -28,7 +28,7 @@ async function bootstrapSession() {
     // If user is already signed in, redirect to dashboard
     if (session?.user) {
       console.log('[upword] User already signed in, redirecting to dashboard');
-      window.location.href = 'dashboard.html';
+      window.location.href = '/dashboard';
       return;
     }
     

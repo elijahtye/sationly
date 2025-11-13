@@ -8,6 +8,26 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/auth",
+      "dest": "/auth.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "/signup.html"
+    },
+    {
+      "src": "/select-tier",
+      "dest": "/select-tier.html"
+    },
+    {
+      "src": "/account",
+      "dest": "/account.html"
+    },
+    {
       "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json))",
       "dest": "/$1"
     },

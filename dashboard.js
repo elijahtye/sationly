@@ -168,7 +168,7 @@ async function checkTierAndRedirect() {
       console.log('[upword] No session found - redirecting to auth');
       console.log('[upword] If you are signed in, try refreshing the page or signing in again.');
       isRedirecting = true;
-      window.location.href = 'auth.html';
+      window.location.href = '/auth';
       return;
     }
     
@@ -198,7 +198,7 @@ async function checkTierAndRedirect() {
         // No subscription found - redirect to tier selection
         console.log('[upword] No subscription found - redirecting to tier selection');
         isRedirecting = true;
-        window.location.href = 'select-tier.html';
+        window.location.href = '/select-tier';
         return;
       }
 
@@ -206,7 +206,7 @@ async function checkTierAndRedirect() {
         console.error('[upword] Error checking subscription:', error);
         // On error, redirect to tier selection to be safe
         isRedirecting = true;
-        window.location.href = 'select-tier.html';
+        window.location.href = '/select-tier';
         return;
       }
 
@@ -214,7 +214,7 @@ async function checkTierAndRedirect() {
       if (!subscription) {
         console.log('[upword] No subscription object - redirecting to tier selection');
         isRedirecting = true;
-        window.location.href = 'select-tier.html';
+        window.location.href = '/select-tier';
         return;
       }
 
@@ -251,7 +251,7 @@ async function checkTierAndRedirect() {
           isActive: isActive ? 'YES' : 'NO'
         });
         isRedirecting = true;
-        window.location.href = 'select-tier.html';
+        window.location.href = '/select-tier';
         return;
       }
 
@@ -1419,7 +1419,7 @@ function initializeAccountModal() {
         }
         
         // Redirect to home page after sign out
-        window.location.href = 'index.html';
+        window.location.href = '/';
       } catch (error) {
         console.error('[upword] Sign out error:', error);
         alert('Unable to sign out. Please try again.');

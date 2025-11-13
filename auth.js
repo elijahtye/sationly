@@ -108,7 +108,7 @@ async function checkTierAndRedirectWithSession(session) {
       // No subscription found - go to tier selection
       console.log('[upword] No subscription found - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = 'select-tier.html';
+      window.location.href = '/select-tier';
       return;
     }
 
@@ -116,7 +116,7 @@ async function checkTierAndRedirectWithSession(session) {
       console.error('[upword] Error checking subscription:', error);
       // On error, go to tier selection (safer)
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = 'select-tier.html';
+      window.location.href = '/select-tier';
       return;
     }
 
@@ -124,12 +124,12 @@ async function checkTierAndRedirectWithSession(session) {
       // User has tier - go to dashboard
       console.log('[upword] User has active tier:', subscription.tier, '- redirecting to dashboard');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = 'dashboard.html';
+      window.location.href = '/dashboard';
     } else {
       // No active tier - go to tier selection
       console.log('[upword] No active tier - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = 'select-tier.html';
+      window.location.href = '/select-tier';
     }
   } catch (error) {
     console.error('[upword] Error checking tier after sign-in:', error);
@@ -175,7 +175,7 @@ async function bootstrapAuthState() {
     // If user is already signed in, redirect to dashboard
     if (data.session?.user) {
       console.log('[upword] User already signed in, redirecting to dashboard');
-      window.location.href = 'dashboard.html';
+      window.location.href = '/dashboard';
       return;
     }
     

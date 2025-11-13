@@ -18,7 +18,7 @@
     <script>
       // Define functions immediately so onclick handlers can use them
       window.openPaywall = function() {
-        window.location.href = 'signup.html';
+        window.location.href = '/signup';
       };
 
       window.closePaywall = function() {
@@ -141,7 +141,7 @@
                   </select>
                 </div>
                 <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(137, 211, 216, 0.2);">
-                  <button type="button" class="primary" onclick="window.location.href='auth.html'; return false;">
+                  <button type="button" class="primary" onclick="window.location.href='/auth'; return false;">
                     Get Started
                   </button>
                 </div>
@@ -159,7 +159,7 @@
                 <div class="conversation-messages"></div>
               </div>
               <div style="text-align: center; margin: 1rem 0;">
-                <button type="button" class="secondary" onclick="window.location.href='dashboard.html'; return false;">Open Dashboard</button>
+                <button type="button" class="secondary" onclick="window.location.href='/dashboard'; return false;">Open Dashboard</button>
               </div>
               <div class="recording-controls">
                 <button type="button" class="secondary" id="stop-recording-btn">Stop recording</button>
@@ -204,7 +204,7 @@
             </li>
           </ul>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-            <button type="button" class="primary light" id="get-started-btn-2" onclick="window.location.href='signup.html'; return false;">Get Started</button>
+            <button type="button" class="primary light" id="get-started-btn-2" onclick="window.location.href='/signup'; return false;">Get Started</button>
           </div>
         </div>
         <div class="contrast-visual" aria-hidden="true">

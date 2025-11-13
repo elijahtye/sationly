@@ -131,7 +131,7 @@
           const supabase = createClient();
           const { data: { session } } = await supabase.auth.getSession();
           if (session?.user) {
-            window.location.href = 'dashboard.html';
+            window.location.href = '/dashboard';
           }
         } catch (error) {
           // If check fails, let the page load normally
@@ -186,7 +186,7 @@
         </form>
 
         <div class="auth-helper">
-          Already have an account? <a href="auth.html">Sign in here</a>.
+          Already have an account? <a href="/auth">Sign in here</a>.
         </div>
 
         <div class="auth-status" id="signup-status">
@@ -194,7 +194,7 @@
         </div>
 
         <div class="back-home">
-          <a href="index.html">← Back to home</a>
+          <a href="/">← Back to home</a>
         </div>
       </div>
     </main>

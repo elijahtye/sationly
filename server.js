@@ -206,8 +206,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
           quantity: 1
         }
       ],
-      success_url: `${req.headers.origin || 'http://localhost:5000'}/dashboard.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.origin || 'http://localhost:5000'}/select-tier.html?canceled=true`,
+      success_url: `${req.headers.origin || 'http://localhost:5000'}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.origin || 'http://localhost:5000'}/select-tier?canceled=true`,
       client_reference_id: userId,
       metadata: {
         userId: userId,
@@ -459,6 +459,27 @@ app.post('/api/sessions', upload.single('audio'), async (req, res) => {
   }
 });
 
+
+// Route handlers for clean URLs (without .html)
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(rootDir, 'dashboard.html'));
+});
+
+app.get('/auth', (req, res) => {
+  res.sendFile(path.join(rootDir, 'auth.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(rootDir, 'signup.html'));
+});
+
+app.get('/select-tier', (req, res) => {
+  res.sendFile(path.join(rootDir, 'select-tier.html'));
+});
+
+app.get('/account', (req, res) => {
+  res.sendFile(path.join(rootDir, 'account.html'));
+});
 
 // Catch-all route for SPA (must be last)
 app.get('*', (req, res) => {

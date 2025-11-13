@@ -86,8 +86,8 @@ export default async function handler(req, res) {
           quantity: 1
         }
       ],
-      success_url: `${origin}/dashboard.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/select-tier.html?canceled=true`,
+      success_url: `${origin}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/select-tier?canceled=true`,
       client_reference_id: userId,
       metadata: {
         userId: userId,

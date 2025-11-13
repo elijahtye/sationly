@@ -100,7 +100,7 @@ async function checkExistingTierImmediate() {
     if (!session || !session.user) {
       console.log('[upword] No session found - redirecting to auth');
       isRedirecting = true;
-      window.location.href = 'auth.html';
+      window.location.href = '/auth';
       return;
     }
 
@@ -129,7 +129,7 @@ async function checkExistingTierImmediate() {
         // User has tier3 (highest tier) - redirect to dashboard
         console.log('[upword] User has tier3 (highest tier) - redirecting to dashboard');
         isRedirecting = true;
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard';
         return;
       } else {
         // User has tier1 or tier2 - allow them to stay and upgrade
@@ -168,10 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
           
           if (subscription && subscription.status === 'active') {
             // User has a tier - go to dashboard
-            window.location.href = 'dashboard.html';
+            window.location.href = '/dashboard';
           } else {
             // User signed in but no tier - go to landing page
-            window.location.href = 'index.html';
+            window.location.href = '/';
           }
         } else {
           // Not signed in - go to landing page
@@ -233,7 +233,7 @@ async function selectTier(tier) {
 
       showMessage('success', 'Free plan selected! Redirecting to dashboard...');
       setTimeout(() => {
-        window.location.replace('dashboard.html'); // Use replace to avoid back button issues
+        window.location.replace('/dashboard'); // Use replace to avoid back button issues
       }, 1500);
     } else {
       // Paid tiers - redirect to Stripe checkout

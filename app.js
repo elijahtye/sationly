@@ -8,8 +8,8 @@ let isRedirecting = false;
 async function checkAuthAndRedirect() {
   // Don't run on auth/signup pages
   const currentPage = window.location.pathname;
-  if (currentPage.includes('auth.html') || currentPage.includes('signup.html') || 
-      currentPage.includes('select-tier.html') || currentPage.includes('dashboard.html')) {
+  if (currentPage.includes('/auth') || currentPage.includes('/signup') || 
+      currentPage.includes('/select-tier') || currentPage.includes('/dashboard')) {
     console.log('[upword] Skipping auth check on', currentPage);
     return;
   }
@@ -109,7 +109,7 @@ function showSignInButton() {
     <button
       type="button"
       class="secondary compact"
-      onclick="window.location.href='auth.html'; return false;"
+      onclick="window.location.href='/auth'; return false;"
     >
       Sign In
     </button>
@@ -119,7 +119,7 @@ function showSignInButton() {
   const getStartedBtn = document.getElementById('get-started-btn');
   if (getStartedBtn) {
     getStartedBtn.onclick = () => {
-      window.location.href = 'signup.html';
+      window.location.href = '/signup';
     };
   }
   
@@ -127,7 +127,7 @@ function showSignInButton() {
   const getStartedBtn2 = document.getElementById('get-started-btn-2');
   if (getStartedBtn2) {
     getStartedBtn2.onclick = () => {
-      window.location.href = 'signup.html';
+      window.location.href = '/signup';
     };
   }
 }
@@ -141,7 +141,7 @@ function showDashboardButton() {
     <button
       type="button"
       class="secondary compact"
-      onclick="window.location.href='dashboard.html'; return false;"
+      onclick="window.location.href='/dashboard'; return false;"
     >
       Go to Dashboard
     </button>
@@ -151,7 +151,7 @@ function showDashboardButton() {
   const getStartedBtn = document.getElementById('get-started-btn');
   if (getStartedBtn) {
     getStartedBtn.onclick = () => {
-      window.location.href = 'dashboard.html';
+      window.location.href = '/dashboard';
     };
   }
   
@@ -159,7 +159,7 @@ function showDashboardButton() {
   const getStartedBtn2 = document.getElementById('get-started-btn-2');
   if (getStartedBtn2) {
     getStartedBtn2.onclick = () => {
-      window.location.href = 'dashboard.html';
+      window.location.href = '/dashboard';
     };
   }
 }
@@ -252,13 +252,13 @@ function initPaywall() {
       if (tier === 'free') {
         alert('You\'ve selected the Free plan. Redirecting to dashboard...');
         setTimeout(() => {
-          window.location.href = 'dashboard.html';
+          window.location.href = '/dashboard';
         }, 500);
       } else {
         // For paid tiers, show payment message then redirect
         alert(`You've selected ${tier === 'monthly' ? 'the Monthly plan ($15/month)' : 'the Lifetime plan ($200 one-time)'}. In a real implementation, this would redirect to payment processing. For now, redirecting to dashboard...`);
         setTimeout(() => {
-          window.location.href = 'dashboard.html';
+          window.location.href = '/dashboard';
         }, 500);
       }
       
