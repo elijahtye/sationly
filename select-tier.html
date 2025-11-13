@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Choose Your Plan - Sationly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .tier-selection-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: radial-gradient(circle at top, rgba(137, 211, 216, 0.2), transparent),
+          radial-gradient(circle at bottom, rgba(247, 176, 198, 0.18), transparent),
+          #050914;
+      }
+      .tier-selection-container {
+        max-width: 1200px;
+        width: 100%;
+      }
+      .tier-selection-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .tier-selection-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-bright);
+      }
+      .tier-selection-header p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+      }
+      .pricing-tiers {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .tier-card {
+        background: rgba(8, 12, 24, 0.92);
+        border: 1px solid rgba(137, 211, 216, 0.25);
+        border-radius: 24px;
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+      .tier-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(137, 211, 216, 0.5);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      .tier-card.featured {
+        border-color: rgba(247, 176, 198, 0.5);
+        box-shadow: 0 0 30px rgba(247, 176, 198, 0.2);
+      }
+      .tier-badge {
+        position: absolute;
+        top: -12px;
+        right: 2rem;
+        background: linear-gradient(135deg, rgba(247, 176, 198, 0.95), rgba(137, 211, 216, 0.95));
+        color: #050914;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .tier-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .tier-header h3 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-bright);
+      }
+      .tier-price {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent-soft);
+        margin-bottom: 0.5rem;
+      }
+      .tier-price span {
+        font-size: 1rem;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+      .tier-features {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 2rem 0;
+      }
+      .tier-features li {
+        padding: 0.75rem 0;
+        color: var(--text-bright);
+        border-bottom: 1px solid rgba(137, 211, 216, 0.1);
+        padding-left: 1.5rem;
+        position: relative;
+      }
+      .tier-features li:last-child {
+        border-bottom: none;
+      }
+      .tier-features li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--accent-soft);
+        font-weight: 700;
+      }
+      .tier-button {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(137, 211, 216, 0.3);
+        background: rgba(137, 211, 216, 0.1);
+        color: var(--text-bright);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .tier-button:hover {
+        background: rgba(137, 211, 216, 0.2);
+        border-color: rgba(137, 211, 216, 0.5);
+      }
+      .tier-button.primary {
+        background: linear-gradient(135deg, rgba(137, 211, 216, 0.95), rgba(247, 176, 198, 0.95));
+        color: #050914;
+        border: none;
+      }
+      .tier-button.primary:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(137, 211, 216, 0.3);
+      }
+      .tier-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .loading-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 9, 20, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      .loading-overlay.active {
+        display: flex;
+      }
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(137, 211, 216, 0.2);
+        border-top-color: var(--accent-soft);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .message {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        display: none;
+      }
+      .message.error {
+        background: rgba(202, 33, 70, 0.16);
+        border: 1px solid rgba(202, 33, 70, 0.35);
+        color: #ffd9e1;
+      }
+      .message.success {
+        background: rgba(137, 211, 216, 0.15);
+        border: 1px solid rgba(137, 211, 216, 0.3);
+        color: rgba(137, 211, 216, 0.95);
+      }
+      .close-button {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgba(137, 211, 216, 0.3);
+        background: rgba(8, 12, 24, 0.9);
+        color: var(--text-bright);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        z-index: 100;
+        backdrop-filter: blur(8px);
+      }
+      .close-button:hover {
+        background: rgba(137, 211, 216, 0.15);
+        border-color: rgba(137, 211, 216, 0.5);
+        transform: scale(1.1);
+      }
+      .close-button:active {
+        transform: scale(0.95);
+      }
+      .close-button svg {
+        width: 20px;
+        height: 20px;
+      }
+      @media (max-width: 768px) {
+        .close-button {
+          top: 1rem;
+          right: 1rem;
+          width: 40px;
+          height: 40px;
+        }
+        .close-button svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    </style>
+    <script>
+      window.__SUPABASE_URL__ =
+        window.__SUPABASE_URL__ || 'https://ipersqmillkeppeiyhfd.supabase.co';
+      window.__SUPABASE_ANON_KEY__ =
+        window.__SUPABASE_ANON_KEY__ ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ';
+    </script>
+  </head>
+  <body>
+    <div class="tier-selection-page">
+      <button class="close-button" id="close-tier-page" aria-label="Close" title="Go back to dashboard">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="tier-selection-container">
+        <div class="tier-selection-header">
+          <h1>Choose Your Plan</h1>
+          <p>Select the plan that works best for you. You can upgrade or downgrade anytime.</p>
+        </div>
+
+        <div class="pricing-tiers">
+          <div class="tier-card">
+            <div class="tier-header">
+              <h3>Tier 1</h3>
+              <div class="tier-price">Free</div>
+            </div>
+            <ul class="tier-features">
+              <li>2 minute sessions per week</li>
+              <li>Generalized feedback</li>
+              <li>Basic conversation practice</li>
+            </ul>
+            <button class="tier-button" data-tier="tier1" id="tier1-btn">Select Free Plan</button>
+          </div>
+
+          <div class="tier-card featured">
+            <div class="tier-badge">Popular</div>
+            <div class="tier-header">
+              <h3>Tier 2</h3>
+              <div class="tier-price">$15<span>/month</span></div>
+            </div>
+            <ul class="tier-features">
+              <li>Unlimited sessions</li>
+              <li>Specialized feedback</li>
+              <li>Customizable situations</li>
+              <li>Custom conversation goals</li>
+              <li>Access to community forums</li>
+            </ul>
+            <button class="tier-button primary" data-tier="tier2" id="tier2-btn">Select Monthly Plan</button>
+          </div>
+
+          <div class="tier-card">
+            <div class="tier-header">
+              <h3>Tier 3</h3>
+              <div class="tier-price">$200<span> one-time</span></div>
+            </div>
+            <ul class="tier-features">
+              <li>All Tier 2 features</li>
+              <li>Permanent access</li>
+              <li>Priority support</li>
+              <li>Early access to new features</li>
+            </ul>
+            <button class="tier-button" data-tier="tier3" id="tier3-btn">Select Lifetime Plan</button>
+          </div>
+        </div>
+
+        <div id="tier-message" class="message"></div>
+      </div>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <script type="module" src="./supabaseClient.js"></script>
+    <script type="module" src="./select-tier.js"></script>
+  </body>
+</html>
+

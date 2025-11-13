@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Sationly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <script>
+      window.__SUPABASE_URL__ =
+        window.__SUPABASE_URL__ || 'https://ipersqmillkeppeiyhfd.supabase.co';
+      window.__SUPABASE_ANON_KEY__ =
+        window.__SUPABASE_ANON_KEY__ ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ';
+    </script>
+    <script type="module" src="./supabaseClient.js"></script>
+  </head>
+  <body>
+    <header class="dashboard-header">
+      <nav class="dashboard-nav">
+        <div class="brand">
+          <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='logoGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f7b0c6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2389d3d8;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(2, 14)'%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Crect x='13' y='11' width='2' height='4' rx='1' fill='white'/%3E%3Crect x='17' y='9' width='2' height='6' rx='1' fill='white'/%3E%3Crect x='21' y='7' width='2' height='8' rx='1' fill='white'/%3E%3C/g%3E%3C/svg%3E" alt="Sationly Logo" class="logo-icon" />
+          <span class="brand-text">
+            <span class="brand-name">Sationly</span>
+          </span>
+        </div>
+        <div class="nav-right">
+          <a href="index.html" class="nav-link">Home</a>
+          <button class="upgrade-button" id="upgrade-btn" style="display: none;">
+            Upgrade My Tier!
+          </button>
+          <div class="user-menu">
+            <button class="profile-picture-btn" id="user-menu-btn" aria-label="Account">
+              <img id="nav-profile-picture" src="" alt="Profile" class="nav-profile-picture" />
+            </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="dashboard-main">
+      <div class="dashboard-container">
+        <section class="dashboard-hero">
+          <h1>Practice Your Conversations</h1>
+          <p>Record yourself and get AI-powered feedback to improve your social flow</p>
+        </section>
+
+        <section class="practice-section">
+          <div class="practice-card">
+            <div class="practice-setup" id="practice-setup">
+              <h2>Start a Practice Session</h2>
+              <form id="practice-form" class="practice-form">
+                <div class="practice-form-layout">
+                  <div class="custom-goal-panel" id="custom-goal-group">
+                    <label for="custom-goal-input">
+                      Custom goal
+                      <span class="lock-icon" id="custom-goal-lock" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M8 1C6.34 1 5 2.34 5 4V5H4C3.45 5 3 5.45 3 6V13C3 13.55 3.45 14 4 14H12C12.55 14 13 13.55 13 13V6C13 5.45 12.55 5 12 5H11V4C11 2.34 9.66 1 8 1ZM8 2C9.1 2 10 2.9 10 4V5H6V4C6 2.9 6.9 2 8 2ZM4 6H12V13H4V6Z" fill="#888"/>
+                        </svg>
+                      </span>
+                    </label>
+                    <textarea
+                      id="custom-goal-input"
+                      name="customGoal"
+                      placeholder="Describe your custom goal..."
+                      class="custom-goal-input"
+                      maxlength="120"
+                      rows="6"
+                    ></textarea>
+                  </div>
+                  <div class="form-fields-column">
+                    <div class="form-group">
+                      <label for="conversation-goal">Pre-determined goal</label>
+                      <select id="conversation-goal" name="goal">
+                        <option value="">Select a goal...</option>
+                        <option value="networking">Networking at an event</option>
+                        <option value="first-date">First date conversation</option>
+                        <option value="job-interview">Job interview</option>
+                        <option value="small-talk">Casual small talk</option>
+                        <option value="deep-connection">Building deeper connections</option>
+                        <option value="public-speaking">Public speaking confidence</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="duration">Conversation duration</label>
+                      <select id="duration" name="duration" required>
+                        <option value="1">1 minute (quick practice)</option>
+                        <option value="2" id="duration-2">2 minutes</option>
+                        <option value="3" id="duration-3" selected>3 minutes (recommended)</option>
+                        <option value="5" id="duration-5">5 minutes</option>
+                        <option value="10" id="duration-10" style="display: none;">10 minutes</option>
+                        <option value="15" id="duration-15" style="display: none;">15 minutes (extended practice)</option>
+                      </select>
+                      <div id="tier1-session-info" style="display: none; margin-top: 0.75rem; padding: 0.75rem; background: rgba(137, 211, 216, 0.1); border-radius: 8px; border: 1px solid rgba(137, 211, 216, 0.2);">
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+                          <strong style="color: var(--accent-soft);">Sessions used:</strong> 
+                          <span id="session-count">0/3</span>
+                        </p>
+                        <p id="cooldown-message" style="margin: 0.5rem 0 0 0; font-size: 0.8rem; color: var(--text-muted); display: none;"></p>
+                      </div>
+                    </div>
+                    <button type="button" class="primary" id="start-recording-btn">
+                      Start Recording
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="recording-interface" id="recording-interface" style="display: none;">
+              <div class="recording-status">
+                <div class="recording-indicator">
+                  <span class="indicator-icon idle" id="recording-icon"></span>
+                  <span class="indicator-label" id="recording-status-label">Idle</span>
+                </div>
+                <p class="recording-tip" id="recording-tip">Press start to begin your next turn.</p>
+              </div>
+              <div class="conversation-display" id="conversation-display">
+                <div class="conversation-messages" id="conversation-messages"></div>
+              </div>
+              <div class="recording-controls">
+                <button type="button" class="primary" id="start-turn-btn">Start Recording</button>
+                <button type="button" class="secondary" id="stop-recording-btn">Stop Recording</button>
+                <button type="button" class="secondary" id="end-conversation-btn">End Conversation</button>
+                <div class="timer" id="timer">00:00</div>
+                <div class="environment-timer" id="environment-timer" style="display: none;">
+                  <span class="environment-timer-label">Environment:</span>
+                  <span class="environment-timer-value" id="environment-timer-value">00:00</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="feedback-interface" id="feedback-interface" style="display: none;">
+              <h2>Your Feedback</h2>
+              <div class="feedback-content" id="feedback-content">
+                <div class="feedback-loading" id="feedback-loading">
+                  <div class="spinner"></div>
+                  <p>Analyzing your conversation...</p>
+                </div>
+              </div>
+              <button type="button" class="primary" id="new-session-btn">Start New Session</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-section">
+          <h2>Your Progress</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value" id="total-sessions">0</div>
+              <div class="stat-label">Total Sessions</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="total-time">0m</div>
+              <div class="stat-label">Practice Time</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="avg-score">-</div>
+              <div class="stat-label">Avg. Score</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="streak">0</div>
+              <div class="stat-label">Day Streak</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="history-section">
+          <h2>Recent Sessions</h2>
+          <div class="history-list" id="history-list">
+            <p class="empty-state">No sessions yet. Start your first practice session above!</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Account Modal -->
+    <div class="account-overlay" id="account-overlay" style="display: none;">
+      <div class="account-modal">
+        <button class="account-close" id="account-close" aria-label="Close">&times;</button>
+        <div class="account-header">
+          <h2>Account</h2>
+        </div>
+        <div class="account-content">
+          <!-- Profile Picture Section -->
+          <div class="account-section">
+            <h3>Profile Picture</h3>
+            <div class="profile-picture-container">
+              <div class="avatar-preview-container">
+                <img id="account-avatar-preview" src="" alt="Profile" class="account-avatar-preview" />
+                <div class="avatar-upload-overlay">
+                  <label for="account-avatar-upload" class="avatar-upload-label">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 4V20M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    Upload
+                  </label>
+                  <input type="file" id="account-avatar-upload" accept="image/*" style="display: none;" />
+                </div>
+              </div>
+              <p class="avatar-upload-hint">Click to upload a new profile picture</p>
+              <p id="avatar-upload-status" class="avatar-upload-status"></p>
+            </div>
+          </div>
+
+          <!-- Stats Section -->
+          <div class="account-section">
+            <h3>Your Stats</h3>
+            <div class="account-stats-grid">
+              <div class="account-stat-item">
+                <div class="account-stat-label">Total Sessions</div>
+                <div class="account-stat-value" id="account-total-sessions">0</div>
+              </div>
+              <div class="account-stat-item">
+                <div class="account-stat-label">Current Streak</div>
+                <div class="account-stat-value streak-value" id="account-streak">0 days</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information Section -->
+          <div class="account-section">
+            <h3>Contact Information</h3>
+            <div class="contact-info-form">
+              <div class="form-group">
+                <label for="account-email">Email Address</label>
+                <div class="input-with-button">
+                  <input type="email" id="account-email" class="account-input" value="" readonly />
+                  <button type="button" class="edit-button" id="edit-email-btn">Edit</button>
+                </div>
+                <p class="field-hint">Used for login and password recovery</p>
+              </div>
+              <div class="form-group">
+                <label for="account-phone">Phone Number</label>
+                <div class="input-with-button">
+                  <input type="tel" id="account-phone" class="account-input" value="" placeholder="Not set" readonly />
+                  <button type="button" class="edit-button" id="edit-phone-btn">Edit</button>
+                </div>
+                <p class="field-hint">Used for password recovery if you forget your email</p>
+              </div>
+              <div id="contact-info-status" class="contact-info-status"></div>
+            </div>
+          </div>
+
+          <!-- Sign Out Section -->
+          <div class="account-section">
+            <button type="button" class="sign-out-button" id="sign-out-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>
+
+

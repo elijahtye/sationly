@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sationly • Sign In</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: radial-gradient(circle at top, rgba(137, 211, 216, 0.2), transparent),
+          radial-gradient(circle at bottom, rgba(247, 176, 198, 0.18), transparent),
+          #050914;
+      }
+      .auth-card {
+        width: min(440px, 100%);
+        background: rgba(8, 12, 24, 0.92);
+        border: 1px solid rgba(137, 211, 216, 0.25);
+        border-radius: 28px;
+        padding: 2.5rem 2.25rem;
+        box-shadow: 0 25px 60px rgba(5, 9, 20, 0.55);
+      }
+      .auth-card h1 {
+        font-size: 1.9rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-bright);
+      }
+      .auth-card p {
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+      }
+      .auth-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .auth-tabs button {
+        flex: 1;
+        border-radius: 999px;
+        padding: 0.75rem;
+        border: 1px solid rgba(137, 211, 216, 0.25);
+        background: transparent;
+        color: var(--text-muted);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+      }
+      .auth-tabs button.active {
+        background: linear-gradient(135deg, rgba(137, 211, 216, 0.95), rgba(247, 176, 198, 0.95));
+        color: #050914;
+        border-color: transparent;
+        box-shadow: 0 8px 20px rgba(9, 12, 32, 0.35);
+      }
+      .auth-form {
+        display: grid;
+        gap: 1.25rem;
+      }
+      .auth-form label {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: var(--text-bright);
+        font-size: 0.9rem;
+      }
+      .auth-form input {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+        border: 1px solid rgba(137, 211, 216, 0.3);
+        background: rgba(5, 9, 20, 0.85);
+        color: var(--text-bright);
+      }
+      .auth-form input:focus {
+        outline: none;
+        border-color: rgba(247, 176, 198, 0.55);
+        box-shadow: 0 0 0 3px rgba(247, 176, 198, 0.18);
+      }
+      .auth-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        margin-top: 0.75rem;
+      }
+      .auth-actions button {
+        width: 100%;
+      }
+      .auth-helper {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+      }
+      .auth-helper a {
+        color: rgba(247, 176, 198, 0.9);
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .auth-status {
+        border-top: 1px solid rgba(137, 211, 216, 0.25);
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      .message {
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        font-size: 0.9rem;
+      }
+      .message.error {
+        background: rgba(202, 33, 70, 0.16);
+        border: 1px solid rgba(202, 33, 70, 0.35);
+        color: #ffd9e1;
+      }
+      .message.success {
+        background: rgba(137, 211, 216, 0.15);
+        border: 1px solid rgba(137, 211, 216, 0.3);
+        color: rgba(137, 211, 216, 0.95);
+      }
+      .back-home {
+        margin-top: 1.5rem;
+        text-align: center;
+      }
+      .back-home a {
+        color: rgba(137, 211, 216, 0.9);
+        text-decoration: underline;
+      }
+    </style>
+    <script>
+      window.__SUPABASE_URL__ =
+        window.__SUPABASE_URL__ || 'https://ipersqmillkeppeiyhfd.supabase.co';
+      window.__SUPABASE_ANON_KEY__ =
+        window.__SUPABASE_ANON_KEY__ ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ';
+      
+      // Immediate redirect check for signed-in users
+      (async function() {
+        try {
+          const { createClient } = await import('./supabaseClient.js');
+          const supabase = createClient();
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            window.location.href = 'dashboard.html';
+          }
+        } catch (error) {
+          // If check fails, let the page load normally
+          console.warn('[sationly] Could not check auth state immediately:', error);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="auth-page">
+      <div class="auth-card">
+        <h1>Welcome back to Sationly</h1>
+        <p>Sign in to access your sessions, premium tiers, and personalized feedback.</p>
+
+        <form id="auth-form" class="auth-form" autocomplete="on">
+          <div class="form-group">
+            <label for="email-input">Email</label>
+            <input id="email-input" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="password-input">Password</label>
+            <input id="password-input" name="password" type="password" placeholder="••••••••" minlength="6" required />
+          </div>
+          <div class="auth-actions">
+            <button type="submit" class="primary" id="submit-btn">Sign In</button>
+            <button type="button" class="secondary" id="sign-out-btn" style="display: none;">Sign Out</button>
+          </div>
+          <div id="auth-message" class="message" style="display: none;"></div>
+        </form>
+
+        <div class="auth-helper">
+          Don’t have an account? <a href="signup.html">Create one here</a>.
+        </div>
+
+        <div class="auth-status" id="auth-status">
+          You are currently signed out.
+        </div>
+
+        <div class="back-home">
+          <a href="index.html">← Back to home</a>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="./supabaseClient.js"></script>
+    <script type="module" src="./auth.js"></script>
+  </body>
+</html>
+

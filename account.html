@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account - Sationly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <script>
+      window.__SUPABASE_URL__ =
+        window.__SUPABASE_URL__ || 'https://ipersqmillkeppeiyhfd.supabase.co';
+      window.__SUPABASE_ANON_KEY__ =
+        window.__SUPABASE_ANON_KEY__ ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ';
+    </script>
+    <script type="module" src="./supabaseClient.js"></script>
+  </head>
+  <body>
+    <header class="dashboard-header">
+      <nav class="dashboard-nav">
+        <div class="brand">
+          <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='logoGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f7b0c6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2389d3d8;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(2, 14)'%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Crect x='13' y='11' width='2' height='4' rx='1' fill='white'/%3E%3Crect x='17' y='9' width='2' height='6' rx='1' fill='white'/%3E%3Crect x='21' y='7' width='2' height='8' rx='1' fill='white'/%3E%3C/g%3E%3C/svg%3E" alt="Sationly Logo" class="logo-icon" />
+          <span class="brand-text">
+            <span class="brand-name">Sationly</span>
+          </span>
+        </div>
+        <div class="nav-right">
+          <a href="dashboard.html" class="nav-link">Dashboard</a>
+          <a href="index.html" class="nav-link">Home</a>
+          <button class="upgrade-button" id="upgrade-btn" style="display: none;">
+            Upgrade My Tier!
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="dashboard-main">
+      <div class="dashboard-container">
+        <section class="account-section">
+          <h1>My Account</h1>
+          
+          <div class="account-content">
+            <div class="account-profile-card">
+              <div class="avatar-section">
+                <div class="avatar-container">
+                  <img id="avatar-preview" src="" alt="Avatar" class="avatar-image" />
+                  <div class="avatar-overlay">
+                    <label for="avatar-upload" class="avatar-upload-label">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15V3M12 3L8 7M12 3L16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L2 19C2 20.1046 2.89543 21 4 21L20 21C21.1046 21 22 20.1046 22 19L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span>Change</span>
+                    </label>
+                  </div>
+                  <input type="file" id="avatar-upload" accept="image/*" style="display: none;" />
+                </div>
+                <div id="avatar-upload-status" class="upload-status" style="display: none;"></div>
+              </div>
+              
+              <div class="profile-info">
+                <h2 id="user-display-name">Loading...</h2>
+                <p id="user-email" class="user-email">Loading...</p>
+                <div class="tier-badge-display" id="tier-badge">
+                  <span class="tier-label">Tier:</span>
+                  <span class="tier-value" id="tier-value">Loading...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="account-stats-card">
+              <h2>Usage Statistics</h2>
+              <div class="stats-grid-account">
+                <div class="stat-item">
+                  <div class="stat-value-large" id="total-sessions-count">0</div>
+                  <div class="stat-label-large">Total Sessions</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value-large" id="this-week-sessions">0</div>
+                  <div class="stat-label-large">This Week</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value-large" id="total-practice-time">0m</div>
+                  <div class="stat-label-large">Total Practice Time</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value-large" id="account-created-date">-</div>
+                  <div class="stat-label-large">Member Since</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="account-actions">
+            <button type="button" class="secondary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+            <button type="button" class="secondary" id="sign-out-btn">Sign Out</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="account.js"></script>
+  </body>
+</html>
+

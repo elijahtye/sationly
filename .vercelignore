@@ -1,0 +1,16 @@
+node_modules
+.env
+.env.local
+.env.*.local
+uploads
+server.log
+*.log
+.DS_Store
+.git
+.gitignore
+README*.md
+*.md
+!README.md
+*.sql
+get-webhook-secret.sh
+

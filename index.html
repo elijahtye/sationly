@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sationly</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMidYMid meet'%3E%3Cdefs%3E%3ClinearGradient id='logoGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f7b0c6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2389d3d8;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Crect x='13' y='11' width='2' height='4' rx='1' fill='white'/%3E%3Crect x='17' y='9' width='2' height='6' rx='1' fill='white'/%3E%3Crect x='21' y='7' width='2' height='8' rx='1' fill='white'/%3E%3C/g%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Define functions immediately so onclick handlers can use them
+      // Waitlist feature flag - set to false to remove waitlist and go straight to paywall
+      window.ENABLE_WAITLIST = true;
+
+      window.openPaywall = function() {
+        // Check if waitlist is enabled
+        if (window.ENABLE_WAITLIST) {
+          window.openWaitlist();
+        } else {
+          window.openPaywallDirect();
+        }
+      };
+
+      window.openPaywallDirect = function() {
+        const paywallOverlay = document.getElementById('paywall-overlay');
+        if (paywallOverlay) {
+          paywallOverlay.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          console.log('Paywall opened');
+        } else {
+          console.error('Paywall overlay not found');
+        }
+      };
+
+      window.openWaitlist = function() {
+        const waitlistOverlay = document.getElementById('waitlist-overlay');
+        if (waitlistOverlay) {
+          waitlistOverlay.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          console.log('Waitlist opened');
+        } else {
+          console.error('Waitlist overlay not found');
+        }
+      };
+
+      window.closeWaitlist = function() {
+        const waitlistOverlay = document.getElementById('waitlist-overlay');
+        if (waitlistOverlay) {
+          waitlistOverlay.style.display = 'none';
+          document.body.style.overflow = '';
+          console.log('Waitlist closed');
+        }
+      };
+
+      window.closePaywall = function() {
+        const paywallOverlay = document.getElementById('paywall-overlay');
+        if (paywallOverlay) {
+          paywallOverlay.style.display = 'none';
+          document.body.style.overflow = '';
+          console.log('Paywall closed');
+        }
+      };
+
+      window.closePaywallAndGoHome = function() {
+        window.closePaywall();
+        // Scroll to top of the page smoothly
+        setTimeout(function() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+      };
+    </script>
+    <script>
+      window.__SUPABASE_URL__ =
+        window.__SUPABASE_URL__ || 'https://ipersqmillkeppeiyhfd.supabase.co';
+      window.__SUPABASE_ANON_KEY__ =
+        window.__SUPABASE_ANON_KEY__ ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ';
+    </script>
+    <script type="module" src="./supabaseClient.js"></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="top-nav">
+        <div class="brand">
+          <img src="data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='logoGradient' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23f7b0c6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2389d3d8;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(2, 14)'%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Cpath d='M10 6c0-2.2 1.8-4 4-4h12c2.2 0 4 1.8 4 4v10c0 2.2-1.8 4-4 4h-2.5l-2 3.5c-0.4 0.7-1.2 0.7-1.6 0L19 20h-5c-2.2 0-4-1.8-4-4V6z' fill='url(%23logoGradient)'/%3E%3Crect x='13' y='11' width='2' height='4' rx='1' fill='white'/%3E%3Crect x='17' y='9' width='2' height='6' rx='1' fill='white'/%3E%3Crect x='21' y='7' width='2' height='8' rx='1' fill='white'/%3E%3C/g%3E%3C/svg%3E" alt="Sationly Logo" class="logo-icon" />
+          <span class="brand-text">
+            <span class="brand-name">Sationly</span>
+            <span class="brand-tagline">AI Conversation Coach</span>
+          </span>
+        </div>
+        <div class="top-nav-actions" id="top-nav-actions">
+          <!-- Auth buttons will be added dynamically by app.js -->
+        </div>
+      </nav>
+      <div class="hero-content">
+        <p class="eyebrow">AI-powered conversation practice</p>
+        <h1>How you speak becomes who you are.</h1>
+        <p class="hero-subtitle">
+          Practice real conversations with AI that adapts to your goals. Record yourself, 
+          engage in 1-10 minute conversations, and receive personalized feedback to improve 
+          your social flow.
+        </p>
+        <div class="hero-actions">
+          <button type="button" class="primary" id="get-started-btn">Get Started</button>
+          <button type="button" class="secondary" onclick="document.getElementById('practice').scrollIntoView({ behavior: 'smooth' }); return false;">Learn more</button>
+        </div>
+      </div>
+    <!-- Auth Modal -->
+    <div class="auth-overlay" id="auth-overlay" style="display: none;">
+      <div class="auth-modal">
+        <button class="auth-close" onclick="window.closeAuthModal(); return false;" aria-label="Close">&times;</button>
+        <div class="auth-tabs">
+          <button type="button" id="tab-signin" class="auth-tab active">Sign In</button>
+          <button type="button" id="tab-signup" class="auth-tab">Create Account</button>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <div class="form-group">
+            <label for="auth-email">Email</label>
+            <input type="email" id="auth-email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="auth-password">Password</label>
+            <input type="password" id="auth-password" name="password" required minlength="6" />
+          </div>
+          <div class="form-group" id="display-name-group" style="display: none;">
+            <label for="auth-display-name">Display name (optional)</label>
+            <input type="text" id="auth-display-name" name="display_name" maxlength="60" placeholder="How should we call you?" />
+          </div>
+          <button type="submit" class="primary" id="auth-submit-btn">Continue</button>
+          <p class="auth-error" id="auth-error" aria-live="polite"></p>
+        </form>
+        </div>
+      </div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+    </header>
+
+    <main>
+      <section class="section" id="practice">
+        <div class="section-heading">
+          <h2>Practice real conversations</h2>
+          <p>
+            Record yourself speaking, then engage with an AI that maintains natural 
+            conversation flow. Set your goal, choose your duration, and receive 
+            personalized feedback to improve.
+          </p>
+        </div>
+        <div class="practice-interface">
+          <div class="practice-card">
+            <div class="practice-setup">
+              <h3>Start your practice session</h3>
+              <form id="practice-form" class="practice-form">
+                <div class="form-group">
+                  <label for="conversation-goal">What's your goal for this conversation?</label>
+                  <select id="conversation-goal" name="goal" required>
+                    <option value="">Select a goal...</option>
+                    <option value="networking">Networking at an event</option>
+                    <option value="first-date">First date conversation</option>
+                    <option value="job-interview">Job interview</option>
+                    <option value="small-talk">Casual small talk</option>
+                    <option value="deep-connection">Building deeper connections</option>
+                    <option value="public-speaking">Public speaking confidence</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="duration">Conversation duration</label>
+                  <select id="duration" name="duration" required>
+                    <option value="1">1 minute (quick practice)</option>
+                    <option value="3">3 minutes (recommended)</option>
+                    <option value="5">5 minutes</option>
+                    <option value="15">15 minutes (extended practice)</option>
+                  </select>
+                </div>
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(137, 211, 216, 0.2);">
+                  <button type="button" class="primary" onclick="window.location.href='auth.html'; return false;">
+                    Get Started
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="recording-interface" id="recording-interface" style="display: none;">
+              <div class="recording-status">
+                <div class="recording-indicator">
+                  <span class="pulse"></span>
+                  <span>Recording...</span>
+                </div>
+                <p class="recording-tip">Speak naturally. The AI will respond to your conversation.</p>
+              </div>
+              <div class="conversation-display" id="conversation-display">
+                <div class="conversation-messages"></div>
+              </div>
+              <div style="text-align: center; margin: 1rem 0;">
+                <button type="button" class="secondary" onclick="window.location.href='dashboard.html'; return false;">Open Dashboard</button>
+              </div>
+              <div class="recording-controls">
+                <button type="button" class="secondary" id="stop-recording-btn">Stop recording</button>
+                <button type="button" class="secondary" id="end-conversation-btn">End conversation</button>
+                <div class="timer" id="timer">00:00</div>
+              </div>
+            </div>
+            <div class="feedback-interface" id="feedback-interface" style="display: none;">
+              <h3>Your feedback</h3>
+              <div class="feedback-content" id="feedback-content">
+                <div class="feedback-loading">
+                  <p>Analyzing your conversation...</p>
+                </div>
+              </div>
+              <button type="button" class="primary" id="new-session-btn">Start new session</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="section contrast" id="benefits">
+        <div class="contrast-content">
+          <h2>Practice without pressure</h2>
+          <p>
+            Build confidence in a judgment-free environment. Every conversation 
+            is private, and you can practice as many times as you need until you 
+            feel ready for real-world interactions.
+          </p>
+          <ul class="features">
+            <li>
+              <strong>Goal-focused practice:</strong> Tailor conversations to 
+              your specific social situations and objectives.
+            </li>
+            <li>
+              <strong>Flexible duration:</strong> Start with 1-minute quick 
+              practices or dive deep with 10-minute sessions.
+            </li>
+            <li>
+              <strong>Actionable insights:</strong> Get specific, personalized 
+              feedback on pacing, engagement, and conversation flow.
+            </li>
+          </ul>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+            <button type="button" class="primary light" id="get-started-btn-2" onclick="window.openPaywall(); return false;">Get Started</button>
+          </div>
+        </div>
+        <div class="contrast-visual" aria-hidden="true">
+          <div class="card">
+            <p class="quote">
+              "I practiced networking conversations for weeks before a big event. 
+              The AI feedback helped me identify my weak spots, and I felt so much 
+              more confident when the real moment came."
+            </p>
+            <p class="attribution">— Alex, user</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="reviews">
+        <div class="section-heading">
+          <h2>What people are saying</h2>
+        </div>
+        <div class="reviews-container">
+          <div class="reviews-carousel">
+            <div class="review-card">
+              <p class="review-text">"I practiced networking conversations for weeks before a big event. The AI feedback helped me identify my weak spots, and I felt so much more confident when the real moment came."</p>
+              <p class="review-author">— Alex, Marketing Professional</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"For the first time, I moved through a party without feeling like I was shrinking. The challenges felt intense but kind, and the feedback was incredibly helpful."</p>
+              <p class="review-author">— Maya, Software Engineer</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"The specialized feedback on my conversation flow was a game-changer. I finally understand how to keep conversations engaging and natural."</p>
+              <p class="review-author">— Jordan, Sales Representative</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"Being able to practice job interviews in a safe space made all the difference. I got the job and felt prepared for every question."</p>
+              <p class="review-author">— Sam, Recent Graduate</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"The customizable situations let me practice exactly what I needed. I can now handle difficult conversations with confidence."</p>
+              <p class="review-author">— Taylor, Project Manager</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"Starting with the free tier was perfect. I got a taste of how helpful this is, and upgrading was an easy decision."</p>
+              <p class="review-author">— Riley, Therapist</p>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="review-card">
+              <p class="review-text">"I practiced networking conversations for weeks before a big event. The AI feedback helped me identify my weak spots, and I felt so much more confident when the real moment came."</p>
+              <p class="review-author">— Alex, Marketing Professional</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"For the first time, I moved through a party without feeling like I was shrinking. The challenges felt intense but kind, and the feedback was incredibly helpful."</p>
+              <p class="review-author">— Maya, Software Engineer</p>
+            </div>
+            <div class="review-card">
+              <p class="review-text">"The specialized feedback on my conversation flow was a game-changer. I finally understand how to keep conversations engaging and natural."</p>
+              <p class="review-author">— Jordan, Sales Representative</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Waitlist Modal -->
+    <div class="paywall-overlay" id="waitlist-overlay" style="display: none;">
+      <div class="paywall-modal waitlist-modal">
+        <button class="paywall-close" onclick="window.closeWaitlist(); return false;" aria-label="Close">&times;</button>
+        <h2>Join the Waitlist</h2>
+        <p class="waitlist-subtitle">Be among the first to access Sationly when we launch</p>
+        <div class="waitlist-actions">
+          <button type="button" class="primary" onclick="window.location.href='dashboard.html'; window.closeWaitlist(); return false;" style="width: 100%; margin-bottom: 1rem;">
+            Open Dashboard
+          </button>
+          <p class="waitlist-divider">or</p>
+        </div>
+        <form id="waitlist-form" class="waitlist-form">
+          <div class="form-group">
+            <label for="waitlist-email">Email address</label>
+            <input
+              id="waitlist-email"
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="waitlist-name">Name (optional)</label>
+            <input
+              id="waitlist-name"
+              type="text"
+              name="name"
+              placeholder="Your name"
+            />
+          </div>
+          <button type="submit" class="primary">Join Waitlist</button>
+          <p class="waitlist-disclaimer">We'll notify you when we launch. No spam, unsubscribe anytime.</p>
+        </form>
+        <div id="waitlist-success" class="waitlist-success" style="display: none;">
+          <div class="checkmark-container">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+              <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+              <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+          </div>
+          <h3>Thank you for joining the waitlist!</h3>
+          <p>We'll send you an email when we launch. Thanks for your interest!</p>
+          <button type="button" class="primary" onclick="window.closeWaitlist(); return false;">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paywall Modal -->
+    <div class="paywall-overlay" id="paywall-overlay" style="display: none;">
+      <div class="paywall-modal">
+        <button class="paywall-close" id="paywall-close" aria-label="Close" onclick="window.closePaywallAndGoHome(); return false;">&times;</button>
+        <h2>Choose Your Plan</h2>
+        <div class="pricing-tiers">
+          <div class="tier-card">
+            <div class="tier-header">
+              <h3>Tier 1</h3>
+              <div class="tier-price">Free</div>
+            </div>
+            <ul class="tier-features">
+              <li>Access to a 2 minute Interactive Environment per week</li>
+              <li>Generalized Feedback</li>
+            </ul>
+            <button class="tier-button" data-tier="free">Select Free Plan</button>
+          </div>
+          
+          <div class="tier-card featured">
+            <div class="tier-badge">Popular</div>
+            <div class="tier-header">
+              <h3>Tier 2</h3>
+              <div class="tier-price">$15<span>/month</span></div>
+            </div>
+            <ul class="tier-features">
+              <li>Access to Unlimited Environments</li>
+              <li>Specialized Feedback</li>
+              <li>Customizable Situations</li>
+              <li>Access to Community Forums</li>
+            </ul>
+            <button class="tier-button primary" data-tier="monthly">Select Monthly Plan</button>
+          </div>
+          
+          <div class="tier-card">
+            <div class="tier-header">
+              <h3>Lifetime</h3>
+              <div class="tier-price">$200<span> one-time</span></div>
+            </div>
+            <ul class="tier-features">
+              <li>All features of Tier 2</li>
+              <li>Permanent Access to the website</li>
+            </ul>
+            <button class="tier-button" data-tier="lifetime">Select Lifetime Plan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Sationly. All rights reserved.</p>
+      <p style="font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.7;">
+        Fonts: <a href="https://fonts.google.com/specimen/Poppins" target="_blank" rel="noopener">Poppins</a> and 
+        <a href="https://fonts.google.com/specimen/Playfair+Display" target="_blank" rel="noopener">Playfair Display</a> by Google Fonts.
+        Background image from <a href="https://unsplash.com/photos/e7ab37603c6f" target="_blank" rel="noopener">Unsplash</a>.
+      </p>
+      <a href="mailto:general@sationly.com">general@sationly.com</a>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
+
