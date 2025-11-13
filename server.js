@@ -439,6 +439,11 @@ app.post('/api/sessions', upload.single('audio'), async (req, res) => {
 });
 
 
+// Serve favicon explicitly
+app.get('/favicon.png', (req, res) => {
+  res.sendFile(path.join(rootDir, 'favicon.png'));
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(rootDir, 'index.html'));
 });
