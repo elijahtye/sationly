@@ -439,28 +439,6 @@ app.post('/api/sessions', upload.single('audio'), async (req, res) => {
 });
 
 
-// Serve favicon explicitly (before catch-all route)
-// Browsers often request /favicon.ico, so handle both
-// Add no-cache headers to prevent browser from caching old favicon
-app.get('/favicon.png', (req, res) => {
-  const faviconPath = path.join(rootDir, 'favicon.png');
-  res.setHeader('Content-Type', 'image/png');
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.sendFile(faviconPath);
-});
-
-app.get('/favicon.ico', (req, res) => {
-  // Serve PNG as ICO for browsers that request favicon.ico
-  const faviconPath = path.join(rootDir, 'favicon.png');
-  res.setHeader('Content-Type', 'image/png');
-  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.sendFile(faviconPath);
-});
-
 // Catch-all route for SPA (must be last)
 app.get('*', (req, res) => {
   // Don't catch favicon requests
