@@ -42,7 +42,7 @@ The webhook handler needs special handling for Vercel. Let me update it:
 
 3. **Push to GitHub**:
    ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/sationly.git
+   git remote add origin https://github.com/elijahtye/sationly.git
    git branch -M main
    git push -u origin main
    ```
