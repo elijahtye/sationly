@@ -496,6 +496,75 @@ app.get('/test-referral-tracking', (req, res) => {
   res.sendFile(path.join(rootDir, 'test-referral-tracking.html'));
 });
 
+// Tier 1 subscription endpoint (for free tier with referral tracking)
+app.post('/api/create-tier1-subscription', async (req, res) => {
+  try {
+    const { userId, referralCode } = req.body;
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Missing auth token' });
+    }
+
+    // Verify user with Supabase
+    const token = authHeader.replace('Bearer ', '');
+    const userResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'apikey': SUPABASE_SERVICE_ROLE_KEY
+      }
+    });
+
+    if (!userResponse.ok) {
+      return res.status(401).json({ message: 'Invalid session' });
+    }
+
+    const user = await userResponse.json();
+    if (user.id !== userId) {
+      return res.status(403).json({ message: 'User ID mismatch' });
+    }
+
+    // Create Tier 1 subscription in Supabase
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        tier: 'tier1',
+        status: 'active',
+        referral_code: referralCode || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[upword] Failed to create Tier 1 subscription:', errorText);
+      return res.status(500).json({ 
+        message: 'Failed to create subscription',
+        details: errorText
+      });
+    }
+
+    const result = await response.json();
+    console.log('[upword] Tier 1 subscription created for user:', userId, 'referral_code:', referralCode);
+
+    res.json({ success: true, subscription: result });
+  } catch (error) {
+    console.error('[upword] Tier 1 subscription error:', error);
+    res.status(500).json({ 
+      message: 'Failed to create subscription',
+      details: error.message 
+    });
+  }
+});
+
 // Catch-all route for SPA (must be last)
 app.get('*', (req, res) => {
   // Don't catch favicon requests

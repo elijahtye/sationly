@@ -218,18 +218,26 @@ async function selectTier(tier) {
     const userId = session.user.id;
 
     if (tier === 'tier1') {
-      // Free tier - just update subscription in database
-      const { error } = await supabase
-        .from('subscriptions')
-        .upsert({
-          user_id: userId,
-          tier: 'tier1',
-          status: 'active'
-        }, {
-          onConflict: 'user_id'
-        });
+      // Free tier - create subscription via API (includes referral tracking)
+      // Get referral code from localStorage if available
+      const referralCode = window.referralTracker?.getReferralCode() || null;
+      
+      const response = await fetch('/api/create-tier1-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          userId: userId,
+          referralCode: referralCode
+        })
+      });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to create subscription');
+      }
 
       showMessage('success', 'Free plan selected! Redirecting to dashboard...');
       setTimeout(() => {
