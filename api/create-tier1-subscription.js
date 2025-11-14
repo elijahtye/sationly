@@ -1,4 +1,5 @@
 // API endpoint to create Tier 1 (free) subscription with referral tracking
+// NOTE: This endpoint does NOT contact Stripe - it only creates a subscription in Supabase
 export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
@@ -38,14 +39,15 @@ export default async function handler(req, res) {
       return res.status(403).json({ message: 'User ID mismatch' });
     }
 
-    // Create Tier 1 subscription in Supabase
+    // Create or update Tier 1 subscription in Supabase (NO STRIPE - instant activation)
+    // Using upsert to handle cases where subscription already exists
     const response = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'apikey': SUPABASE_SERVICE_ROLE_KEY,
         'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        'Prefer': 'resolution=merge-duplicates'
+        'Prefer': 'resolution=merge-duplicates' // Upsert behavior
       },
       body: JSON.stringify({
         user_id: userId,
@@ -68,7 +70,7 @@ export default async function handler(req, res) {
     }
 
     const result = await response.json();
-    console.log('[upword] Tier 1 subscription created for user:', userId, 'referral_code:', referralCode);
+    console.log('[upword] Tier 1 subscription created/updated for user:', userId, 'referral_code:', referralCode || 'none');
 
     res.json({ success: true, subscription: result });
   } catch (error) {

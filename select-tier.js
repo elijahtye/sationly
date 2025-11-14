@@ -278,9 +278,11 @@ async function selectTier(tier) {
     const userId = session.user.id;
 
     if (tier === 'tier1') {
-      // Free tier - create subscription via API (includes referral tracking)
+      // Free tier - create subscription directly in Supabase (NO STRIPE INVOLVED)
       // Get referral code from localStorage if available
       const referralCode = window.referralTracker?.getReferralCode() || null;
+      
+      console.log('[upword] Creating Tier 1 subscription (free tier, no Stripe)...');
       
       const response = await fetch('/api/create-tier1-subscription', {
         method: 'POST',
@@ -296,13 +298,18 @@ async function selectTier(tier) {
 
       if (!response.ok) {
         const error = await response.json();
+        console.error('[upword] Tier 1 subscription creation failed:', error);
         throw new Error(error.message || 'Failed to create subscription');
       }
 
+      const result = await response.json();
+      console.log('[upword] Tier 1 subscription created successfully:', result);
+      
       showMessage('success', 'Free plan selected! Redirecting to dashboard...');
+      // Redirect immediately - no delay needed since no payment processing
       setTimeout(() => {
         window.location.replace('/dashboard'); // Use replace to avoid back button issues
-      }, 1500);
+      }, 500); // Reduced delay since no Stripe processing needed
     } else {
       // Paid tiers - redirect to Stripe checkout
       // Get referral code from localStorage if available
