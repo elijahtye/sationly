@@ -20,8 +20,11 @@ async function checkExistingTierImmediate() {
   if (justRedirected) {
     sessionStorage.removeItem('justRedirected');
     console.log('[upword] Just redirected here, skipping immediate check - allowing page to load');
-    // Don't return - allow page to continue loading normally
-    // The page should show tier selection options
+    // Ensure loading overlay is hidden so page is visible
+    if (loadingOverlay) {
+      loadingOverlay.classList.remove('active');
+    }
+    // Don't run the check - just allow page to load normally
     return;
   }
   
