@@ -125,6 +125,9 @@ async function checkExistingTierImmediate() {
     if (subscription && subscription.status === 'active') {
       const normalizedTier = String(subscription.tier || '').toLowerCase().trim();
       
+      // Mark current tier with checkmark
+      markCurrentTier(normalizedTier);
+      
       if (normalizedTier === 'tier3') {
         // User has tier3 (highest tier) - redirect to dashboard
         console.log('[upword] User has tier3 (highest tier) - redirecting to dashboard');
@@ -202,6 +205,54 @@ function showLoading() {
 
 function hideLoading() {
   loadingOverlay.classList.remove('active');
+}
+
+// Mark the current tier with a checkmark
+function markCurrentTier(currentTier) {
+  // Remove checkmarks from all buttons first
+  tierButtons.forEach(btn => {
+    btn.classList.remove('current-tier');
+    const checkmark = btn.querySelector('.tier-checkmark');
+    if (checkmark) {
+      checkmark.remove();
+    }
+    // Reset button text
+    const tier = btn.getAttribute('data-tier');
+    if (tier === 'tier1') {
+      btn.textContent = 'Select Free Plan';
+    } else if (tier === 'tier2') {
+      btn.textContent = 'Select Monthly Plan';
+    } else if (tier === 'tier3') {
+      btn.textContent = 'Select Lifetime Plan';
+    }
+  });
+
+  // Find the button for the current tier
+  const currentTierBtn = document.querySelector(`[data-tier="${currentTier}"]`);
+  if (currentTierBtn) {
+    currentTierBtn.classList.add('current-tier');
+    
+    // Add checkmark icon
+    const checkmark = document.createElement('span');
+    checkmark.className = 'tier-checkmark';
+    checkmark.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    `;
+    
+    // Update button text
+    if (currentTier === 'tier1') {
+      currentTierBtn.textContent = 'Current Plan';
+    } else if (currentTier === 'tier2') {
+      currentTierBtn.textContent = 'Current Plan';
+    } else if (currentTier === 'tier3') {
+      currentTierBtn.textContent = 'Current Plan';
+    }
+    
+    // Insert checkmark at the beginning
+    currentTierBtn.insertBefore(checkmark, currentTierBtn.firstChild);
+  }
 }
 
 async function selectTier(tier) {

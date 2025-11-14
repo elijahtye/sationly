@@ -150,6 +150,24 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+      .tier-button.current-tier {
+        background: rgba(137, 211, 216, 0.2);
+        border-color: rgba(137, 211, 216, 0.6);
+        position: relative;
+      }
+      .tier-button.current-tier.primary {
+        background: linear-gradient(135deg, rgba(137, 211, 216, 0.95), rgba(247, 176, 198, 0.95));
+        border: 2px solid rgba(137, 211, 216, 0.8);
+      }
+      .tier-checkmark {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 0.5rem;
+        color: var(--accent-soft);
+      }
+      .tier-button.current-tier.primary .tier-checkmark {
+        color: #050914;
+      }
       .loading-overlay {
         position: fixed;
         inset: 0;
