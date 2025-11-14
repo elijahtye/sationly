@@ -129,25 +129,33 @@ async function checkTierAndRedirectWithSession(session) {
       .from('subscriptions')
       .select('tier, status')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle(); // Use maybeSingle() instead of single() to avoid 406 errors
 
     // Clear timeout since we got a response
     clearTimeout(redirectTimeout);
 
     console.log('[upword] Subscription check result:', { subscription, error, errorCode: error?.code });
 
-    if (error && error.code === 'PGRST116') {
-      // No subscription found - go to tier selection
-      console.log('[upword] No subscription found - redirecting to tier selection');
+    // Handle errors - 406 or PGRST116 both mean no subscription found
+    if (error) {
+      // Check if it's a "no rows" error (PGRST116) or "not acceptable" error (406)
+      if (error.code === 'PGRST116' || error.message?.includes('406') || error.status === 406) {
+        // No subscription found - go to tier selection
+        console.log('[upword] No subscription found - redirecting to tier selection');
+        sessionStorage.setItem('justRedirected', 'true');
+        window.location.href = '/select-tier';
+        return;
+      }
+      // Other errors - still redirect to tier selection (safer)
+      console.error('[upword] Error checking subscription:', error);
       sessionStorage.setItem('justRedirected', 'true');
-      // Force redirect immediately
       window.location.href = '/select-tier';
       return;
     }
-
-    if (error) {
-      console.error('[upword] Error checking subscription:', error);
-      // On error, go to tier selection (safer)
+    
+    // If no data returned (maybeSingle returns null instead of error)
+    if (!subscription) {
+      console.log('[upword] No subscription found (null response) - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
       window.location.href = '/select-tier';
       return;

@@ -119,15 +119,24 @@ async function checkExistingTierImmediate() {
     console.log('[upword] Checking for existing tier for user:', userId);
 
     // Check if user has an active subscription
+    // Use maybeSingle() to avoid 406 errors when no subscription exists
     const { data: subscription, error } = await supabase
       .from('subscriptions')
       .select('tier, status')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle(); // Use maybeSingle() instead of single() to avoid 406 errors
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-      console.error('[upword] Error checking subscription:', error);
-      // If there's an error, show the tier selection page anyway (don't redirect)
+    // Handle errors - 406 or PGRST116 both mean no subscription found
+    if (error) {
+      // Check if it's a "no rows" error (PGRST116) or "not acceptable" error (406)
+      if (error.code === 'PGRST116' || error.message?.includes('406') || error.status === 406) {
+        // No subscription found - this is fine, show tier selection page
+        console.log('[upword] No subscription found - showing tier selection');
+      } else {
+        // Other errors - log but still show tier selection page
+        console.error('[upword] Error checking subscription:', error);
+      }
+      // Continue to show tier selection page regardless of error
       return;
     }
 
@@ -344,7 +353,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         .from('subscriptions')
         .select('tier, status')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle(); // Use maybeSingle() to avoid 406 errors
       
       if (subscription && subscription.status === 'active') {
         const normalizedTier = String(subscription.tier || '').toLowerCase().trim();
