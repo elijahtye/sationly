@@ -131,29 +131,18 @@ async function checkExistingTierImmediate() {
       return;
     }
 
-    // Only redirect to dashboard if user has tier3 (highest tier)
-    // Tier1 and tier2 users should be able to stay and upgrade
+    // Allow ALL users to access tier selection page (no redirects)
+    // Users with tiers can see their current tier marked, users without tiers can select one
     if (subscription && subscription.status === 'active') {
       const normalizedTier = String(subscription.tier || '').toLowerCase().trim();
       
       // Mark current tier with checkmark
       markCurrentTier(normalizedTier);
-      
-      if (normalizedTier === 'tier3') {
-        // User has tier3 (highest tier) - redirect to dashboard
-        console.log('[upword] User has tier3 (highest tier) - redirecting to dashboard');
-        isRedirecting = true;
-        window.location.href = '/dashboard';
-        return;
-      } else {
-        // User has tier1 or tier2 - allow them to stay and upgrade
-        console.log('[upword] User has', normalizedTier, '- allowing access to tier selection page for upgrade');
-        return;
-      }
+      console.log('[upword] User has tier:', normalizedTier, '- showing tier selection page');
+    } else {
+      // No active subscription - continue loading the tier selection page
+      console.log('[upword] No active tier found - showing tier selection');
     }
-
-    // No active subscription - continue loading the tier selection page
-    console.log('[upword] No active tier found - showing tier selection');
   } catch (error) {
     console.error('[upword] Error checking existing tier:', error);
     // On error, show tier selection page (safer than blocking or redirecting)

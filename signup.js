@@ -72,7 +72,7 @@ signupForm.addEventListener('submit', async (event) => {
   submitBtn.textContent = 'Creating account…';
 
   try {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -84,6 +84,17 @@ signupForm.addEventListener('submit', async (event) => {
 
     if (error) {
       throw error;
+    }
+
+    // If signup was successful and user is immediately signed in (email confirmation disabled)
+    if (data.session) {
+      showMessage('success', 'Account created! Redirecting to tier selection...');
+      // Immediately redirect to tier selection (they don't have a tier yet)
+      setTimeout(() => {
+        sessionStorage.setItem('justRedirected', 'true');
+        window.location.replace('/select-tier');
+      }, 500);
+      return;
     }
 
     showMessage(

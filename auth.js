@@ -52,12 +52,10 @@ authForm.addEventListener('submit', async (event) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    showMessage('success', 'Signed in successfully. Redirecting…');
-    
-    // Immediately redirect - don't wait
+    // Immediately redirect - don't show success message, just redirect
     // Use the session from the sign-in response directly
     if (data.session) {
-      // Redirect immediately without delay
+      // Redirect immediately without delay - check tier and redirect accordingly
       checkTierAndRedirectWithSession(data.session);
     } else {
       // Fallback: wait for auth state change
@@ -71,7 +69,6 @@ authForm.addEventListener('submit', async (event) => {
   } catch (error) {
     console.error('[upword] Sign in error:', error);
     showMessage('error', error.message || 'Unable to sign in. Please try again.');
-  } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Sign In';
   }
