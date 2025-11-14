@@ -88,6 +88,7 @@ app.post('/api/stripe-webhook', express.raw({ type: 'application/json' }), async
       const session = event.data.object;
       const userId = session.metadata.userId;
       const tier = session.metadata.tier;
+      const referralCode = session.metadata.referral_code || null;
 
       // Update subscription in Supabase
       const response = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions`, {
@@ -103,6 +104,7 @@ app.post('/api/stripe-webhook', express.raw({ type: 'application/json' }), async
           tier: tier,
           status: 'active',
           stripe_subscription_id: session.subscription || session.id,
+          referral_code: referralCode,
           updated_at: new Date().toISOString()
         })
       });
@@ -211,7 +213,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
       client_reference_id: userId,
       metadata: {
         userId: userId,
-        tier: tier
+        tier: tier,
+        referral_code: req.body.referralCode || null
       }
     });
 
@@ -479,6 +482,13 @@ app.get('/select-tier', (req, res) => {
 
 app.get('/account', (req, res) => {
   res.sendFile(path.join(rootDir, 'account.html'));
+});
+
+// Referral/influencer tracking routes
+app.get('/elijahtye', (req, res) => {
+  // Redirect to home with referral tracking
+  // The referral-tracker.js script will handle storing the referral code
+  res.sendFile(path.join(rootDir, 'index.html'));
 });
 
 // Catch-all route for SPA (must be last)

@@ -51,6 +51,9 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'Missing metadata' });
       }
 
+      // Get referral code from metadata
+      const referralCode = session.metadata.referral_code || null;
+
       // Update subscription in Supabase
       const response = await fetch(`${SUPABASE_URL}/rest/v1/subscriptions`, {
         method: 'POST',
@@ -65,6 +68,7 @@ export default async function handler(req, res) {
           tier: tier,
           status: 'active',
           stripe_subscription_id: session.subscription || session.id,
+          referral_code: referralCode,
           updated_at: new Date().toISOString()
         })
       });

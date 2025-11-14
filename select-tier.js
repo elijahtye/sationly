@@ -237,6 +237,9 @@ async function selectTier(tier) {
       }, 1500);
     } else {
       // Paid tiers - redirect to Stripe checkout
+      // Get referral code from localStorage if available
+      const referralCode = window.referralTracker?.getReferralCode() || null;
+      
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -245,7 +248,8 @@ async function selectTier(tier) {
         },
         body: JSON.stringify({
           tier: tier,
-          userId: userId
+          userId: userId,
+          referralCode: referralCode
         })
       });
 
