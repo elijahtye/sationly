@@ -52,16 +52,19 @@ authForm.addEventListener('submit', async (event) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    // Show success message briefly
-    showMessage('success', 'Signed in successfully. Redirecting…');
+    console.log('[upword] Sign-in successful, session:', data.session ? 'present' : 'missing');
     
     // Immediately redirect - use the session from the sign-in response directly
     if (data.session) {
+      // Set redirect flag to prevent onAuthStateChange from interfering
+      isRedirecting = true;
       // Redirect immediately - check tier and redirect accordingly
-      await checkTierAndRedirectWithSession(data.session);
+      checkTierAndRedirectWithSession(data.session);
+      // Don't await - let redirect happen immediately
     } else {
       // Fallback: wait for auth state change (shouldn't happen normally)
       console.warn('[upword] No session in sign-in response, waiting for auth state change...');
+      isRedirecting = true;
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
           subscription.unsubscribe();
@@ -71,6 +74,7 @@ authForm.addEventListener('submit', async (event) => {
     }
   } catch (error) {
     console.error('[upword] Sign in error:', error);
+    isRedirecting = false; // Reset flag on error
     showMessage('error', error.message || 'Unable to sign in. Please try again.');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Sign In';
@@ -109,10 +113,8 @@ async function checkTierAndRedirectWithSession(session) {
       // No subscription found - go to tier selection
       console.log('[upword] No subscription found - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      // Force redirect immediately - don't wait
-      setTimeout(() => {
-        window.location.href = '/select-tier';
-      }, 100);
+      // Force redirect immediately
+      window.location.href = '/select-tier';
       return;
     }
 
@@ -120,9 +122,7 @@ async function checkTierAndRedirectWithSession(session) {
       console.error('[upword] Error checking subscription:', error);
       // On error, go to tier selection (safer)
       sessionStorage.setItem('justRedirected', 'true');
-      setTimeout(() => {
-        window.location.href = '/select-tier';
-      }, 100);
+      window.location.href = '/select-tier';
       return;
     }
 
@@ -130,16 +130,12 @@ async function checkTierAndRedirectWithSession(session) {
       // User has tier - go to dashboard
       console.log('[upword] User has active tier:', subscription.tier, '- redirecting to dashboard');
       sessionStorage.setItem('justRedirected', 'true');
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 100);
+      window.location.href = '/dashboard';
     } else {
       // No active tier - go to tier selection
       console.log('[upword] No active tier - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      setTimeout(() => {
-        window.location.href = '/select-tier';
-      }, 100);
+      window.location.href = '/select-tier';
     }
   } catch (error) {
     console.error('[upword] Error checking tier after sign-in:', error);
@@ -207,7 +203,7 @@ async function bootstrapAuthState() {
 }
 
 supabase.auth.onAuthStateChange(async (_event, session) => {
-  // If user signs in while on this page, check tier and redirect accordingly
+  // Only handle auth state changes if we're NOT already redirecting (to prevent double redirects)
   if (session?.user && !isRedirecting) {
     console.log('[upword] Auth state changed - user signed in, checking tier...');
     isRedirecting = true;
@@ -221,8 +217,10 @@ supabase.auth.onAuthStateChange(async (_event, session) => {
         .single();
       
       if (subscription && subscription.status === 'active') {
+        console.log('[upword] User has tier, redirecting to dashboard');
         window.location.href = '/dashboard';
       } else {
+        console.log('[upword] User has no tier, redirecting to tier selection');
         window.location.href = '/select-tier';
       }
     } catch (error) {
@@ -231,7 +229,11 @@ supabase.auth.onAuthStateChange(async (_event, session) => {
     }
     return;
   }
-  updateStatus(session);
+  
+  // Only update status if we're not redirecting
+  if (!isRedirecting) {
+    updateStatus(session);
+  }
 });
 
 bootstrapAuthState();
