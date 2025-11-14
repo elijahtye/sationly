@@ -491,6 +491,11 @@ app.get('/elijahtye', (req, res) => {
   res.sendFile(path.join(rootDir, 'index.html'));
 });
 
+// Test page for referral tracking
+app.get('/test-referral-tracking', (req, res) => {
+  res.sendFile(path.join(rootDir, 'test-referral-tracking.html'));
+});
+
 // Catch-all route for SPA (must be last)
 app.get('*', (req, res) => {
   // Don't catch favicon requests

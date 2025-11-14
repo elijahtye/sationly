@@ -28,4 +28,3 @@ COMMENT ON VIEW public.referral_stats IS 'Shows referral statistics grouped by r
 
 -- Success! You can now view referral_stats in Supabase Table Editor
 -- The view will automatically update as new purchases come in
-

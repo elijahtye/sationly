@@ -32,6 +32,10 @@
       "dest": "/index.html"
     },
     {
+      "src": "/test-referral-tracking",
+      "dest": "/test-referral-tracking.html"
+    },
+    {
       "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json))",
       "dest": "/$1"
     },
