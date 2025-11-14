@@ -240,8 +240,8 @@ async function checkTierAndRedirect() {
       console.log('[upword] No session found - redirecting to auth');
       console.log('[upword] If you are signed in, try refreshing the page or signing in again.');
       isRedirecting = true;
-      window.location.href = '/auth';
-      return;
+      window.location.replace('/auth');
+      return false;
     }
     
     console.log('[upword] Session confirmed:', session.user.email);
