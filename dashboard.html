@@ -25,6 +25,18 @@
     </script>
     <script src="referral-tracker.js"></script>
     <script type="module" src="./supabaseClient.js"></script>
+    <style>
+      /* Hide body immediately until tier is confirmed */
+      body {
+        visibility: hidden;
+        opacity: 0;
+      }
+      body.tier-confirmed {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
+    </style>
   </head>
   <body>
     <header class="dashboard-header">

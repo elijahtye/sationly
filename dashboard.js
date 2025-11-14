@@ -35,11 +35,21 @@ let lastEnvironmentCreatedAt = null; // Track last environment creation date
 
 // Initialize dashboard UI once DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
+  // IMMEDIATELY check tier before showing ANY content
+  const hasTier = await checkTierAndRedirect();
+  
+  // Only proceed if user has a tier
+  if (!hasTier) {
+    // Redirect will happen in checkTierAndRedirect, but hide content just in case
+    document.body.style.display = 'none';
+    return;
+  }
+  
+  // Show body now that tier is confirmed
+  document.body.classList.add('tier-confirmed');
+  
   // Check for Stripe checkout session_id in URL and verify subscription
   await verifyCheckoutSession();
-  
-  // Check if user has selected a tier
-  await checkTierAndRedirect();
   
   // Load profile picture early (before other initializations)
   loadNavProfilePicture();
@@ -139,10 +149,11 @@ function initializeHeaderScroll() {
 }
 
 // Check if user is signed in - only redirect if NOT signed in
+// Returns true if user has tier, false otherwise (will redirect if false)
 async function checkTierAndRedirect() {
   if (isRedirecting) {
     console.log('[upword] Redirect already in progress, skipping...');
-    return;
+    return false;
   }
   
   try {
@@ -259,24 +270,24 @@ async function checkTierAndRedirect() {
         // No subscription found - redirect to tier selection
         console.log('[upword] No subscription found - redirecting to tier selection');
         isRedirecting = true;
-        window.location.href = '/select-tier';
-        return;
+        window.location.replace('/select-tier');
+        return false;
       }
 
       if (error) {
         console.error('[upword] Error checking subscription:', error);
         // On error, redirect to tier selection to be safe
         isRedirecting = true;
-        window.location.href = '/select-tier';
-        return;
+        window.location.replace('/select-tier');
+        return false;
       }
 
       // Check if subscription exists and has valid tier
       if (!subscription) {
         console.log('[upword] No subscription object - redirecting to tier selection');
         isRedirecting = true;
-        window.location.href = '/select-tier';
-        return;
+        window.location.replace('/select-tier');
+        return false;
       }
 
       console.log('[upword] Subscription found:', {

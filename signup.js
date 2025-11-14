@@ -25,10 +25,21 @@ async function bootstrapSession() {
     if (error) throw error;
     const session = data.session;
     
-    // If user is already signed in, redirect to dashboard
+    // If user is already signed in, check tier and redirect accordingly
     if (session?.user) {
-      console.log('[upword] User already signed in, redirecting to dashboard');
-      window.location.href = '/dashboard';
+      console.log('[upword] User already signed in, checking tier...');
+      const userId = session.user.id;
+      const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('tier, status')
+        .eq('user_id', userId)
+        .single();
+      
+      if (subscription && subscription.status === 'active') {
+        window.location.href = '/dashboard';
+      } else {
+        window.location.href = '/select-tier';
+      }
       return;
     }
     

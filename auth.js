@@ -172,10 +172,21 @@ async function bootstrapAuthState() {
     const { data, error } = await supabase.auth.getSession();
     if (error) throw error;
     
-    // If user is already signed in, redirect to dashboard
+    // If user is already signed in, check tier and redirect accordingly
     if (data.session?.user) {
-      console.log('[upword] User already signed in, redirecting to dashboard');
-      window.location.href = '/dashboard';
+      console.log('[upword] User already signed in, checking tier...');
+      const userId = data.session.user.id;
+      const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('tier, status')
+        .eq('user_id', userId)
+        .single();
+      
+      if (subscription && subscription.status === 'active') {
+        window.location.href = '/dashboard';
+      } else {
+        window.location.href = '/select-tier';
+      }
       return;
     }
     
@@ -186,12 +197,29 @@ async function bootstrapAuthState() {
   }
 }
 
-supabase.auth.onAuthStateChange((_event, session) => {
-  // If user signs in while on this page, redirect to dashboard
+supabase.auth.onAuthStateChange(async (_event, session) => {
+  // If user signs in while on this page, check tier and redirect accordingly
   if (session?.user && !isRedirecting) {
-    console.log('[upword] Auth state changed - user signed in, redirecting to dashboard');
+    console.log('[upword] Auth state changed - user signed in, checking tier...');
     isRedirecting = true;
-    window.location.href = 'dashboard.html';
+    
+    try {
+      const userId = session.user.id;
+      const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('tier, status')
+        .eq('user_id', userId)
+        .single();
+      
+      if (subscription && subscription.status === 'active') {
+        window.location.href = '/dashboard';
+      } else {
+        window.location.href = '/select-tier';
+      }
+    } catch (error) {
+      console.error('[upword] Error checking tier:', error);
+      window.location.href = '/select-tier';
+    }
     return;
   }
   updateStatus(session);
