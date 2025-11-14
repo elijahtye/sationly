@@ -64,26 +64,27 @@
    - Go to Table Editor → `referral_stats` view
    - See aggregated statistics
 
-### Method 4: Use Stripe Test Mode
+### Method 4: Use Stripe Test Mode (Full End-to-End Test)
 
-1. **Use Stripe test cards**:
-   - Card: `4242 4242 4242 4242`
-   - Expiry: Any future date
-   - CVC: Any 3 digits
+**📖 See detailed guide**: `STRIPE_TEST_MODE_GUIDE.md`
 
-2. **Complete test checkout**:
-   - Visit `/elijahtye` first (to store referral)
-   - Sign up/sign in
-   - Select a tier
-   - Use test card to complete checkout
-   - Check database for `referral_code`
-
-3. **Verify in database**:
+**Quick steps**:
+1. Visit `/elijahtye` in incognito window (stores referral code)
+2. Sign up/sign in with test account
+3. Select a tier (Tier 2 or Tier 3)
+4. Use Stripe test card: `4242 4242 4242 4242`
+   - Expiry: Any future date (e.g., `12/34`)
+   - CVC: Any 3 digits (e.g., `123`)
+   - ZIP: Any 5 digits (e.g., `12345`)
+5. Complete checkout (no real charge!)
+6. Verify in database:
    ```sql
    SELECT * FROM subscriptions 
    WHERE referral_code = 'elijahtye' 
    ORDER BY created_at DESC;
    ```
+
+**Important**: Make sure Stripe is in **Test Mode** (not Live Mode)!
 
 ## Verification Checklist
 
