@@ -915,7 +915,15 @@ async function startRecording() {
     conversationCompleted = false;
     pendingConversationEnd = false;
     renderConversation();
-    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    
+    // Reuse existing mediaStream if available and active, otherwise request new one
+    if (!mediaStream || mediaStream.getTracks().every(track => track.readyState === 'ended')) {
+      console.log('[upword] Requesting microphone access...');
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('[upword] Microphone access granted');
+    } else {
+      console.log('[upword] Reusing existing microphone stream');
+    }
 
     const preferredMimeType = pickRecorderMimeType();
     try {
@@ -984,11 +992,18 @@ function stopRecording() {
 
 function cleanupMedia() {
   mediaRecorder = null;
+  // Don't stop mediaStream tracks here - keep them alive for reuse
+  // Only stop when conversation is completely ended or page is unloading
+  audioChunks = [];
+}
+
+function cleanupMediaStream() {
+  // Explicitly stop mediaStream (called when conversation ends or page unloads)
   if (mediaStream) {
     mediaStream.getTracks().forEach((track) => track.stop());
     mediaStream = null;
+    console.log('[upword] Microphone stream stopped');
   }
-  audioChunks = [];
 }
 
 function updateRecordingUI(state) {
@@ -1163,6 +1178,9 @@ async function renderFinalSummary() {
   // Update environment when ending
   await updateEnvironment();
   stopEnvironmentTimer();
+  
+  // Stop microphone stream when conversation ends
+  cleanupMediaStream();
 
   const feedbackContent = document.getElementById('feedback-content');
   if (!feedbackContent) return;
