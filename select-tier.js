@@ -337,6 +337,11 @@ async function selectTier(tier) {
 
 // Check and mark current tier on page load
 document.addEventListener('DOMContentLoaded', async () => {
+  // Ensure loading overlay is hidden when page loads
+  if (loadingOverlay) {
+    loadingOverlay.classList.remove('active');
+  }
+  
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (session && session.user) {
