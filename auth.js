@@ -109,8 +109,10 @@ async function checkTierAndRedirectWithSession(session) {
       // No subscription found - go to tier selection
       console.log('[upword] No subscription found - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      // Force redirect
-      window.location.href = '/select-tier';
+      // Force redirect immediately - don't wait
+      setTimeout(() => {
+        window.location.href = '/select-tier';
+      }, 100);
       return;
     }
 
@@ -118,7 +120,9 @@ async function checkTierAndRedirectWithSession(session) {
       console.error('[upword] Error checking subscription:', error);
       // On error, go to tier selection (safer)
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/select-tier';
+      setTimeout(() => {
+        window.location.href = '/select-tier';
+      }, 100);
       return;
     }
 
@@ -126,12 +130,16 @@ async function checkTierAndRedirectWithSession(session) {
       // User has tier - go to dashboard
       console.log('[upword] User has active tier:', subscription.tier, '- redirecting to dashboard');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/dashboard';
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 100);
     } else {
       // No active tier - go to tier selection
       console.log('[upword] No active tier - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/select-tier';
+      setTimeout(() => {
+        window.location.href = '/select-tier';
+      }, 100);
     }
   } catch (error) {
     console.error('[upword] Error checking tier after sign-in:', error);
