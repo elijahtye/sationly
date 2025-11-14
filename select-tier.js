@@ -329,6 +329,28 @@ async function selectTier(tier) {
   }
 }
 
+// Check and mark current tier on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session && session.user) {
+      const userId = session.user.id;
+      const { data: subscription } = await supabase
+        .from('subscriptions')
+        .select('tier, status')
+        .eq('user_id', userId)
+        .single();
+      
+      if (subscription && subscription.status === 'active') {
+        const normalizedTier = String(subscription.tier || '').toLowerCase().trim();
+        markCurrentTier(normalizedTier);
+      }
+    }
+  } catch (error) {
+    console.error('[upword] Error checking tier for checkmark:', error);
+  }
+});
+
 // Add event listeners to tier buttons
 tierButtons.forEach(btn => {
   btn.addEventListener('click', () => {
