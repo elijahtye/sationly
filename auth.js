@@ -91,7 +91,7 @@ async function checkTierAndRedirectWithSession(session) {
     console.error('[upword] Invalid session provided');
     // Even with invalid session, redirect to tier selection to be safe
     sessionStorage.setItem('justRedirected', 'true');
-    window.location.replace('/select-tier');
+    window.location.href = '/select-tier';
     return;
   }
   
@@ -101,11 +101,21 @@ async function checkTierAndRedirectWithSession(session) {
     const userId = session.user.id;
     console.log('[upword] Checking tier for user:', userId);
     
+    // Set a timeout fallback to ensure redirect happens even if query hangs
+    const redirectTimeout = setTimeout(() => {
+      console.warn('[upword] Tier check timeout - redirecting to tier selection');
+      sessionStorage.setItem('justRedirected', 'true');
+      window.location.href = '/select-tier';
+    }, 5000); // 5 second timeout
+    
     const { data: subscription, error } = await supabase
       .from('subscriptions')
       .select('tier, status')
       .eq('user_id', userId)
       .single();
+
+    // Clear timeout since we got a response
+    clearTimeout(redirectTimeout);
 
     console.log('[upword] Subscription check result:', { subscription, error, errorCode: error?.code });
 
