@@ -46,6 +46,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateStats();
   initializeAccountModal();
   initializeHeaderScroll();
+  
+  // Cleanup microphone stream when page unloads
+  window.addEventListener('beforeunload', () => {
+    cleanupMediaStream();
+  });
 });
 
 // Hide header on scroll down, show on scroll up
