@@ -664,6 +664,39 @@ main {
   margin-top: 0.5rem;
 }
 
+.footer-auth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.footer-auth-btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(137, 211, 216, 0.4);
+  background: rgba(4, 8, 18, 0.6);
+  color: var(--accent-soft);
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.footer-auth-btn:hover {
+  background: rgba(137, 211, 216, 0.15);
+  border-color: rgba(137, 211, 216, 0.6);
+  color: var(--accent-soft);
+  transform: translateY(-1px);
+}
+
+.footer-auth-btn:active {
+  transform: translateY(0);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
