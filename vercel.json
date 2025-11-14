@@ -53,6 +53,12 @@
     },
     "api/stripe-webhook.js": {
       "maxDuration": 10
+    },
+    "api/verify-checkout-session.js": {
+      "maxDuration": 10
+    },
+    "api/create-tier1-subscription.js": {
+      "maxDuration": 10
     }
   }
 }

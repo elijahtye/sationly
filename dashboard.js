@@ -35,6 +35,9 @@ let lastEnvironmentCreatedAt = null; // Track last environment creation date
 
 // Initialize dashboard UI once DOM is ready
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check for Stripe checkout session_id in URL and verify subscription
+  await verifyCheckoutSession();
+  
   // Check if user has selected a tier
   await checkTierAndRedirect();
   
@@ -52,6 +55,59 @@ document.addEventListener('DOMContentLoaded', async () => {
     cleanupMediaStream();
   });
 });
+
+// Verify Stripe checkout session and create subscription if needed
+async function verifyCheckoutSession() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+    
+    if (!sessionId) {
+      return; // No checkout session to verify
+    }
+
+    console.log('[upword] Checkout session detected, verifying...', sessionId);
+
+    // Get current session
+    const { supabase } = await import('./supabaseClient.js');
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError || !session) {
+      console.warn('[upword] No session for checkout verification');
+      return;
+    }
+
+    // Call API to verify and create subscription
+    const response = await fetch('/api/verify-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({
+        sessionId: sessionId
+      })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('[upword] Failed to verify checkout session:', error);
+      return;
+    }
+
+    const result = await response.json();
+    console.log('[upword] Checkout session verified:', result.action, result.subscription);
+
+    // Remove session_id from URL
+    const newUrl = window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
+
+    // Refresh subscription check
+    await checkTierAndRedirect();
+  } catch (error) {
+    console.error('[upword] Error verifying checkout session:', error);
+  }
+}
 
 // Hide header on scroll down, show on scroll up
 let lastScrollTop = 0;
