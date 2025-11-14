@@ -4,6 +4,11 @@ const tierButtons = document.querySelectorAll('.tier-button');
 const messageEl = document.getElementById('tier-message');
 const loadingOverlay = document.getElementById('loading-overlay');
 
+// Ensure loading overlay is hidden by default (in case it shows before script loads)
+if (loadingOverlay) {
+  loadingOverlay.classList.remove('active');
+}
+
 // Prevent multiple redirects
 let isRedirecting = false;
 
