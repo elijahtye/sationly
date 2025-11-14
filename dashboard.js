@@ -337,8 +337,8 @@ async function checkTierAndRedirect() {
       // Error checking subscription - redirect to tier selection
       console.error('[upword] Exception checking subscription:', subError);
       isRedirecting = true;
-      window.location.href = 'select-tier.html';
-      return;
+      window.location.replace('/select-tier');
+      return false;
     }
   } catch (error) {
     console.error('[upword] Error in auth check:', error);
