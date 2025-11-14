@@ -484,6 +484,14 @@ app.get('/account', (req, res) => {
   res.sendFile(path.join(rootDir, 'account.html'));
 });
 
+app.get('/privacy-policy', (req, res) => {
+  res.sendFile(path.join(rootDir, 'privacy-policy.html'));
+});
+
+app.get('/terms-of-service', (req, res) => {
+  res.sendFile(path.join(rootDir, 'terms-of-service.html'));
+});
+
 // Referral/influencer tracking routes
 app.get('/elijahtye', (req, res) => {
   // Redirect to home with referral tracking

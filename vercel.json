@@ -28,6 +28,14 @@
       "dest": "/account.html"
     },
     {
+      "src": "/privacy-policy",
+      "dest": "/privacy-policy.html"
+    },
+    {
+      "src": "/terms-of-service",
+      "dest": "/terms-of-service.html"
+    },
+    {
       "src": "/elijahtye",
       "dest": "/index.html"
     },
