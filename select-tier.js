@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .from('subscriptions')
             .select('tier, status')
             .eq('user_id', userId)
-            .single();
+            .maybeSingle(); // Use maybeSingle() to avoid 406 errors
           
           if (subscription && subscription.status === 'active') {
             // User has a tier - go to dashboard
@@ -187,12 +187,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         } else {
           // Not signed in - go to landing page
-          window.location.href = 'index.html';
+          window.location.href = '/';
         }
       } catch (error) {
         console.error('[upword] Error checking tier for close button:', error);
         // On error, go to landing page
-        window.location.href = 'index.html';
+        window.location.href = '/';
       }
     });
   }
