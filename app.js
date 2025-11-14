@@ -115,6 +115,21 @@ function showSignInButton() {
     </button>
   `;
   
+  // Show sign in button in footer, hide sign out
+  const footerAuthButtons = document.getElementById('footer-auth-buttons');
+  const footerSignInBtn = document.getElementById('footer-sign-in-btn');
+  const footerSignOutBtn = document.getElementById('footer-sign-out-btn');
+  
+  if (footerAuthButtons) {
+    footerAuthButtons.style.display = 'flex';
+  }
+  if (footerSignInBtn) {
+    footerSignInBtn.style.display = 'inline-block';
+  }
+  if (footerSignOutBtn) {
+    footerSignOutBtn.style.display = 'none';
+  }
+  
   // Set "Get Started" button to go to signup
   const getStartedBtn = document.getElementById('get-started-btn');
   if (getStartedBtn) {
@@ -146,6 +161,21 @@ function showDashboardButton() {
       Go to Dashboard
     </button>
   `;
+  
+  // Show sign out button in footer, hide sign in
+  const footerAuthButtons = document.getElementById('footer-auth-buttons');
+  const footerSignInBtn = document.getElementById('footer-sign-in-btn');
+  const footerSignOutBtn = document.getElementById('footer-sign-out-btn');
+  
+  if (footerAuthButtons) {
+    footerAuthButtons.style.display = 'flex';
+  }
+  if (footerSignInBtn) {
+    footerSignInBtn.style.display = 'none';
+  }
+  if (footerSignOutBtn) {
+    footerSignOutBtn.style.display = 'inline-block';
+  }
   
   // Set "Get Started" button to go to dashboard (not signup)
   const getStartedBtn = document.getElementById('get-started-btn');
