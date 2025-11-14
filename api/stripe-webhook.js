@@ -76,10 +76,14 @@ export default async function handler(req, res) {
       if (!response.ok) {
         const errorText = await response.text();
         console.error('[upword] Failed to update subscription:', errorText);
+        console.error('[upword] Response status:', response.status);
+        console.error('[upword] Referral code attempted:', referralCode);
         return res.status(500).json({ message: 'Failed to update subscription' });
       }
 
-      console.log('[upword] Subscription activated for user:', userId, 'tier:', tier);
+      const result = await response.json();
+      console.log('[upword] Subscription activated for user:', userId, 'tier:', tier, 'referral_code:', referralCode);
+      console.log('[upword] Database response:', result);
     }
 
     res.json({ received: true });
