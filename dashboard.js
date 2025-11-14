@@ -323,8 +323,8 @@ async function checkTierAndRedirect() {
           isActive: isActive ? 'YES' : 'NO'
         });
         isRedirecting = true;
-        window.location.href = '/select-tier';
-        return;
+        window.location.replace('/select-tier');
+        return false;
       }
 
       // User has valid active tier (tier1, tier2, or tier3) - allow access
@@ -332,6 +332,7 @@ async function checkTierAndRedirect() {
       console.log('[upword] Access granted - User tier:', userTier);
       showUpgradeButton(userTier);
       // Visibility will be updated in initializeDashboard
+      return true;
     } catch (subError) {
       // Error checking subscription - redirect to tier selection
       console.error('[upword] Exception checking subscription:', subError);
