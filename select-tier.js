@@ -15,10 +15,13 @@ async function checkExistingTierImmediate() {
   }
   
   // Check if we just redirected here - if so, don't redirect again immediately
+  // But still allow the page to load normally
   const justRedirected = sessionStorage.getItem('justRedirected');
   if (justRedirected) {
     sessionStorage.removeItem('justRedirected');
-    console.log('[upword] Just redirected here, skipping immediate check');
+    console.log('[upword] Just redirected here, skipping immediate check - allowing page to load');
+    // Don't return - allow page to continue loading normally
+    // The page should show tier selection options
     return;
   }
   

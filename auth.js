@@ -54,21 +54,17 @@ authForm.addEventListener('submit', async (event) => {
 
     showMessage('success', 'Signed in successfully. Redirecting…');
     
-    // Wait for auth state to be established, then redirect
+    // Immediately redirect - don't wait
     // Use the session from the sign-in response directly
     if (data.session) {
-      // Small delay to ensure everything is ready
-      setTimeout(() => {
-        checkTierAndRedirectWithSession(data.session);
-      }, 800);
+      // Redirect immediately without delay
+      checkTierAndRedirectWithSession(data.session);
     } else {
       // Fallback: wait for auth state change
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
           subscription.unsubscribe();
-          setTimeout(() => {
-            checkTierAndRedirectWithSession(session);
-          }, 500);
+          checkTierAndRedirectWithSession(session);
         }
       });
     }
@@ -108,7 +104,7 @@ async function checkTierAndRedirectWithSession(session) {
       // No subscription found - go to tier selection
       console.log('[upword] No subscription found - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/select-tier';
+      window.location.replace('/select-tier');
       return;
     }
 
@@ -116,7 +112,7 @@ async function checkTierAndRedirectWithSession(session) {
       console.error('[upword] Error checking subscription:', error);
       // On error, go to tier selection (safer)
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/select-tier';
+      window.location.replace('/select-tier');
       return;
     }
 
@@ -124,19 +120,19 @@ async function checkTierAndRedirectWithSession(session) {
       // User has tier - go to dashboard
       console.log('[upword] User has active tier:', subscription.tier, '- redirecting to dashboard');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/dashboard';
+      window.location.replace('/dashboard');
     } else {
       // No active tier - go to tier selection
       console.log('[upword] No active tier - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.href = '/select-tier';
+      window.location.replace('/select-tier');
     }
   } catch (error) {
     console.error('[upword] Error checking tier after sign-in:', error);
     isRedirecting = false;
     // On error, go to tier selection (safer)
     sessionStorage.setItem('justRedirected', 'true');
-    window.location.href = 'select-tier.html';
+    window.location.replace('/select-tier');
   }
 }
 
