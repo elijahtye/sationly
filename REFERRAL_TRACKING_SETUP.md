@@ -6,16 +6,15 @@ This system tracks purchases from influencer referral links (e.g., `sationly.com
 
 ## 📋 Setup Steps
 
-### Step 1: Run Database Migration
+### Step 1: Run Database Migrations
 
-Run the SQL migration to add referral tracking:
+Run these SQL migrations in Supabase SQL Editor (in order):
 
-```sql
--- Run this in Supabase SQL Editor:
--- File: 06_add_referral_tracking.sql
-```
+1. **First migration** (`06_add_referral_tracking.sql`):
+   - Adds `referral_code` column to `subscriptions` table
 
-This adds a `referral_code` column to the `subscriptions` table.
+2. **Second migration** (`07_create_referral_stats_view.sql`):
+   - Creates `referral_stats` view for easy viewing in Table Editor
 
 ### Step 2: How It Works
 
@@ -26,17 +25,25 @@ This adds a `referral_code` column to the `subscriptions` table.
 
 ### Step 3: View Referrals
 
-Query the database to see referrals:
+**Easy Method (Table Editor):**
+1. Go to Supabase Dashboard → Table Editor
+2. Look for the **`referral_stats`** view (it will appear like a table)
+3. Click on it to see all referral statistics:
+   - `referral_code` - The influencer code
+   - `total_purchases` - Total number of purchases
+   - `tier2_purchases` - Number of Tier 2 subscriptions
+   - `tier3_purchases` - Number of Tier 3 purchases
+   - `active_subscriptions` - Currently active subscriptions
+   - `first_purchase_date` - When first purchase happened
+   - `last_purchase_date` - Most recent purchase date
 
+**Advanced Method (SQL Query):**
 ```sql
--- Count purchases by referral code
-SELECT referral_code, COUNT(*) as purchase_count
-FROM subscriptions
-WHERE referral_code IS NOT NULL
-GROUP BY referral_code;
+-- View the referral stats
+SELECT * FROM referral_stats;
 
--- See all purchases with referral codes
-SELECT user_id, tier, referral_code, created_at
+-- See individual purchases with referral codes
+SELECT user_id, tier, referral_code, created_at, status
 FROM subscriptions
 WHERE referral_code IS NOT NULL
 ORDER BY created_at DESC;
@@ -76,20 +83,18 @@ To add a new influencer link (e.g., `sationly.com/influencername`):
 
 ## 📊 Analytics
 
-To see referral performance:
+**View in Table Editor:**
+- Open Supabase Dashboard → Table Editor
+- Click on **`referral_stats`** view
+- See all statistics automatically updated
 
+**Or use SQL:**
 ```sql
--- Total purchases by influencer
-SELECT 
-  referral_code,
-  COUNT(*) as total_purchases,
-  COUNT(CASE WHEN tier = 'tier2' THEN 1 END) as tier2_count,
-  COUNT(CASE WHEN tier = 'tier3' THEN 1 END) as tier3_count
-FROM subscriptions
-WHERE referral_code IS NOT NULL
-  AND status = 'active'
-GROUP BY referral_code
-ORDER BY total_purchases DESC;
+-- View referral stats
+SELECT * FROM referral_stats;
+
+-- Filter by specific referral code
+SELECT * FROM referral_stats WHERE referral_code = 'elijahtye';
 ```
 
 ---
