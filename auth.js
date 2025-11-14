@@ -58,8 +58,25 @@ authForm.addEventListener('submit', async (event) => {
     if (data.session) {
       // Set redirect flag to prevent onAuthStateChange from interfering
       isRedirecting = true;
+      
+      // Set a fallback redirect in case the tier check fails or hangs
+      const fallbackRedirect = setTimeout(() => {
+        console.warn('[upword] Fallback redirect triggered - redirecting to tier selection');
+        sessionStorage.setItem('justRedirected', 'true');
+        window.location.href = '/select-tier';
+      }, 2000); // 2 second fallback
+      
       // Redirect immediately - check tier and redirect accordingly
-      checkTierAndRedirectWithSession(data.session);
+      checkTierAndRedirectWithSession(data.session).then(() => {
+        // Clear fallback if redirect succeeded
+        clearTimeout(fallbackRedirect);
+      }).catch((err) => {
+        console.error('[upword] Error in redirect function:', err);
+        clearTimeout(fallbackRedirect);
+        // Force redirect on error
+        sessionStorage.setItem('justRedirected', 'true');
+        window.location.href = '/select-tier';
+      });
       // Don't await - let redirect happen immediately
     } else {
       // Fallback: wait for auth state change (shouldn't happen normally)
