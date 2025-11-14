@@ -196,6 +196,39 @@ function showDashboardButton() {
 
 // Initialize auth check on page load
 document.addEventListener('DOMContentLoaded', function() {
+  // Setup footer sign out button
+  const footerSignOutBtn = document.getElementById('footer-sign-out-btn');
+  if (footerSignOutBtn) {
+    footerSignOutBtn.addEventListener('click', async () => {
+      if (confirm('Are you sure you want to sign out?')) {
+        try {
+          const { supabase } = await import('./supabaseClient.js');
+          const { error } = await supabase.auth.signOut();
+
+          if (error) {
+            console.error('[upword] Sign out error:', error);
+            alert('Unable to sign out. Please try again.');
+            return;
+          }
+
+          // Redirect to home page after sign out
+          window.location.href = '/';
+        } catch (error) {
+          console.error('[upword] Sign out error:', error);
+          alert('Unable to sign out. Please try again.');
+        }
+      }
+    });
+  }
+
+  // Setup footer sign in button
+  const footerSignInBtn = document.getElementById('footer-sign-in-btn');
+  if (footerSignInBtn) {
+    footerSignInBtn.addEventListener('click', () => {
+      window.location.href = '/auth';
+    });
+  }
+
   // Check auth status first (but don't block page load)
   // Only redirect if user has active tier - otherwise just show appropriate button
   // Use setTimeout to ensure page loads first
