@@ -345,7 +345,8 @@ async function checkTierAndRedirect() {
     // Only redirect if we can't even check auth
     // If we got here, something is seriously wrong, so redirect to auth
     isRedirecting = true;
-    window.location.href = 'auth.html';
+    window.location.replace('/auth');
+    return false;
   }
 }
 
