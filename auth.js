@@ -52,13 +52,16 @@ authForm.addEventListener('submit', async (event) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    // Immediately redirect - don't show success message, just redirect
-    // Use the session from the sign-in response directly
+    // Show success message briefly
+    showMessage('success', 'Signed in successfully. Redirecting…');
+    
+    // Immediately redirect - use the session from the sign-in response directly
     if (data.session) {
-      // Redirect immediately without delay - check tier and redirect accordingly
-      checkTierAndRedirectWithSession(data.session);
+      // Redirect immediately - check tier and redirect accordingly
+      await checkTierAndRedirectWithSession(data.session);
     } else {
-      // Fallback: wait for auth state change
+      // Fallback: wait for auth state change (shouldn't happen normally)
+      console.warn('[upword] No session in sign-in response, waiting for auth state change...');
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
           subscription.unsubscribe();
@@ -82,6 +85,9 @@ async function checkTierAndRedirectWithSession(session) {
   
   if (!session || !session.user) {
     console.error('[upword] Invalid session provided');
+    // Even with invalid session, redirect to tier selection to be safe
+    sessionStorage.setItem('justRedirected', 'true');
+    window.location.replace('/select-tier');
     return;
   }
   
@@ -97,11 +103,14 @@ async function checkTierAndRedirectWithSession(session) {
       .eq('user_id', userId)
       .single();
 
+    console.log('[upword] Subscription check result:', { subscription, error, errorCode: error?.code });
+
     if (error && error.code === 'PGRST116') {
       // No subscription found - go to tier selection
       console.log('[upword] No subscription found - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.replace('/select-tier');
+      // Force redirect
+      window.location.href = '/select-tier';
       return;
     }
 
@@ -109,7 +118,7 @@ async function checkTierAndRedirectWithSession(session) {
       console.error('[upword] Error checking subscription:', error);
       // On error, go to tier selection (safer)
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.replace('/select-tier');
+      window.location.href = '/select-tier';
       return;
     }
 
@@ -117,19 +126,18 @@ async function checkTierAndRedirectWithSession(session) {
       // User has tier - go to dashboard
       console.log('[upword] User has active tier:', subscription.tier, '- redirecting to dashboard');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.replace('/dashboard');
+      window.location.href = '/dashboard';
     } else {
       // No active tier - go to tier selection
       console.log('[upword] No active tier - redirecting to tier selection');
       sessionStorage.setItem('justRedirected', 'true');
-      window.location.replace('/select-tier');
+      window.location.href = '/select-tier';
     }
   } catch (error) {
     console.error('[upword] Error checking tier after sign-in:', error);
-    isRedirecting = false;
     // On error, go to tier selection (safer)
     sessionStorage.setItem('justRedirected', 'true');
-    window.location.replace('/select-tier');
+    window.location.href = '/select-tier';
   }
 }
 
