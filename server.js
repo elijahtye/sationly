@@ -492,6 +492,10 @@ app.get('/terms-of-service', (req, res) => {
   res.sendFile(path.join(rootDir, 'terms-of-service.html'));
 });
 
+app.get('/verify-email', (req, res) => {
+  res.sendFile(path.join(rootDir, 'verify-email.html'));
+});
+
 // Referral/influencer tracking routes
 app.get('/elijahtye', (req, res) => {
   // Redirect to home with referral tracking

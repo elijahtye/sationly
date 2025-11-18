@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Your Email - Sationly</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?t=1734123456" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?t=1734123456" />
+    <link rel="shortcut icon" href="/favicon.png?t=1734123456" />
+    <link rel="apple-touch-icon" href="/favicon.png?t=1734123456" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: radial-gradient(circle at top, rgba(137, 211, 216, 0.2), transparent),
+          radial-gradient(circle at bottom, rgba(247, 176, 198, 0.18), transparent),
+          #050914;
+      }
+      .auth-card {
+        width: min(500px, 100%);
+        background: rgba(8, 12, 24, 0.92);
+        border: 1px solid rgba(137, 211, 216, 0.25);
+        border-radius: 28px;
+        padding: 2.5rem 2.25rem;
+        box-shadow: 0 25px 60px rgba(5, 9, 20, 0.55);
+        text-align: center;
+      }
+      .auth-card h1 {
+        font-size: 1.9rem;
+        margin-bottom: 1rem;
+        color: var(--text-bright);
+      }
+      .auth-card p {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+      .email-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.8;
+      }
+      .message {
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      .message.error {
+        background: rgba(202, 33, 70, 0.16);
+        border: 1px solid rgba(202, 33, 70, 0.35);
+        color: #ffd9e1;
+      }
+      .message.success {
+        background: rgba(137, 211, 216, 0.15);
+        border: 1px solid rgba(137, 211, 216, 0.3);
+        color: rgba(137, 211, 216, 0.95);
+      }
+      .message.info {
+        background: rgba(137, 211, 216, 0.1);
+        border: 1px solid rgba(137, 211, 216, 0.25);
+        color: rgba(137, 211, 216, 0.9);
+      }
+      .resend-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(137, 211, 216, 0.25);
+      }
+      .resend-section p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      .resend-btn {
+        background: transparent;
+        border: 1px solid rgba(137, 211, 216, 0.4);
+        color: rgba(137, 211, 216, 0.9);
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+      .resend-btn:hover:not(:disabled) {
+        background: rgba(137, 211, 216, 0.1);
+        border-color: rgba(137, 211, 216, 0.6);
+      }
+      .resend-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .back-home {
+        margin-top: 2rem;
+        text-align: center;
+      }
+      .back-home a {
+        color: rgba(137, 211, 216, 0.9);
+        text-decoration: underline;
+      }
+      .spinner {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba(137, 211, 216, 0.3);
+        border-top-color: rgba(137, 211, 216, 0.9);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 0.5rem;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .email-address {
+        font-weight: 600;
+        color: var(--accent-soft);
+      }
+    </style>
+    <script>
+      window.__SUPABASE_URL__ =
+        window.__SUPABASE_URL__ || 'https://ipersqmillkeppeiyhfd.supabase.co';
+      window.__SUPABASE_ANON_KEY__ =
+        window.__SUPABASE_ANON_KEY__ ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwZXJzcW1pbGxrZXBwZWl5aGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NDYzMzksImV4cCI6MjA3ODUyMjMzOX0.bDxK6i4mKZHoIHze_-IH-sTCVnRqKek6HSPYN2EcnzQ';
+    </script>
+  </head>
+  <body>
+    <main class="auth-page">
+      <div class="auth-card">
+        <div class="email-icon">📧</div>
+        <h1>Check Your Email</h1>
+        <p>
+          We've sent a verification link to <span class="email-address" id="email-display">your email address</span>.
+          Please click the link in the email to verify your account.
+        </p>
+
+        <div id="verification-message" class="message" style="display: none;"></div>
+
+        <div class="resend-section">
+          <p>Didn't receive the email?</p>
+          <button type="button" class="resend-btn" id="resend-btn">
+            Resend Verification Email
+          </button>
+          <p id="resend-status" style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); display: none;"></p>
+        </div>
+
+        <div class="back-home">
+          <a href="/">← Back to home</a>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="./supabaseClient.js"></script>
+    <script type="module" src="./verify-email.js"></script>
+  </body>
+</html>
+

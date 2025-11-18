@@ -36,6 +36,10 @@
       "dest": "/terms-of-service.html"
     },
     {
+      "src": "/verify-email",
+      "dest": "/verify-email.html"
+    },
+    {
       "src": "/elijahtye",
       "dest": "/index.html"
     },

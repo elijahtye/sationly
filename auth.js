@@ -50,7 +50,20 @@ authForm.addEventListener('submit', async (event) => {
 
   try {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    if (error) {
+      // Check if error is due to unverified email
+      if (error.message?.includes('Email not confirmed') || error.message?.includes('email_not_confirmed')) {
+        showMessage('error', 'Please verify your email before signing in. Check your inbox for the verification link.');
+        // Optionally redirect to verification page
+        setTimeout(() => {
+          window.location.replace(`/verify-email?email=${encodeURIComponent(email)}`);
+        }, 2000);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In';
+        return;
+      }
+      throw error;
+    }
 
     console.log('[upword] Sign-in successful, session:', data.session ? 'present' : 'missing');
     

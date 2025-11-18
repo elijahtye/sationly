@@ -72,13 +72,17 @@ signupForm.addEventListener('submit', async (event) => {
   submitBtn.textContent = 'Creating account…';
 
   try {
+    // Get the current origin for redirect URLs
+    const origin = window.location.origin;
+    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           display_name: displayName
-        }
+        },
+        emailRedirectTo: `${origin}/verify-email?email=${encodeURIComponent(email)}`
       }
     });
 
@@ -97,16 +101,14 @@ signupForm.addEventListener('submit', async (event) => {
       return;
     }
 
-    showMessage(
-      'success',
-      'Account created! Please check your email for a confirmation link. You can sign in once you confirm.'
-    );
-    signupForm.reset();
-    statusEl.textContent = 'Check your inbox to confirm your email, then sign in.';
+    // Email confirmation is required - redirect to verification page
+    showMessage('success', 'Account created! Redirecting to verification page...');
+    setTimeout(() => {
+      window.location.replace(`/verify-email?email=${encodeURIComponent(email)}`);
+    }, 1500);
   } catch (error) {
     console.error('[upword] Sign up error:', error);
     showMessage('error', error.message || 'Unable to create account. Please try again.');
-  } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Create account';
   }
